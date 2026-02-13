@@ -1,0 +1,6 @@
+2025-12-14 12:05:59,078 [INFO] __main__: Loaded DLL: C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application4\libfunctions.dll
+2025-12-14 12:05:59,079 [INFO] __main__: Loaded weights from my_lda_weights_for_microcontroller.c
+2025-12-14 12:05:59,082 [INFO] __main__: Copied video to session: C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application4\realtimetest\SESSION_REALTEST_20251214_120559\video_8.avi
+2025-12-14 12:05:59,082 [INFO] __main__: Created real-test session: C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application4\realtimetest\SESSION_REALTEST_20251214_120559
+2025-12-14 12:05:59,111 [INFO] __main__: Loaded trial trial_8.txt: samples=17133, win_per_trial=341
+2025-12-14 12:05:59,118 [INFO] __main__: Classified trial trial_8.txt: 341 windows (raw) -> C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application4\realtimetest\SESSION_REALTEST_20251214_120559\predictions\trial_8.txt

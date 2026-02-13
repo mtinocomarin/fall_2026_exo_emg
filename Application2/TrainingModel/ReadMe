@@ -1,0 +1,94 @@
+Application 2 
+This folder Application 2 contains the program for real-time training and testing of the hybrid ExoGlove. 
+The following is a list of all files within this folder. Each file name is accompanied by a brief description of its contents and context.
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+File Name: samplecutter.py
+Type: Python Script
+
+Description:
+Utility class to locate EMG/text and video files inside a session folder and play videos in a lightweight PyQt5 viewer with frame/second-accurate navigation. It first tries a preferred filename (e.g., video_1.avi or trial_1.txt), then falls back to searching the folder (non-recursive → recursive). The built-in player uses OpenCV + QLabel and provides buttons & hotkeys for quick review.
+
+Functions / Classes:
+
+class samplecut(folder_path, preferred_name=None)
+Creates a helper bound to a session folder (e.g., finalemg/set1/act1) and an optional base name to prefer.
+
+set_emg_path() -> Path
+Finds the EMG .txt file. Order: preferred name → first *.txt in folder → first **/*.txt recursively. Raises FileNotFoundError if none.
+
+set_video_path() -> Path
+Finds the video .avi file. Order: preferred name → first *.avi in folder → first **/*.avi recursively. Raises FileNotFoundError if none.
+
+watch_video_pyqt(path=None, scale=1.0)
+Opens a simple PyQt5 video window using OpenCV. If path is None, uses self.video_path (auto-resolves).
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+File Name: snipper.py
+Type: Python Script (PyQt5 app)
+
+Description:
+Interactive tool to sync, preview, and cut aligned EMG and video segments. It loads EMG logs (timestamp ch1 ch2 ch3) and an AVI video, estimates/accepts start times, lets you fine-tune sync (±20 ms), place IN/OUT markers on the EMG timeline, and export the matching EMG slice and the corresponding trimmed video (via ffmpeg when available or OpenCV fallback).
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+File Name: test.py
+Type: Python Script (PyQt5 + pyqtgraph + OpenCV)
+
+Description:
+Self-contained viewer that plays an AVI video and plots EMG from a .txt file in sync. You can click on the EMG plot to seek the video, adjust a time offset to align signals, drop two markers to define a region, and export the selected EMG segment and matching video clip. It auto-finds files in a folder (or use explicit paths), supports light downsampling for smooth plotting, and keeps the EMG view centered around the current cursor.
+
+Functions / Classes:
+
+run() – launch the UI.
+
+mark_here() / redo_marks() – add/clear selection marks.
+
+add_two_markers(t0=None, t1=None) – add a draggable selection region.
+
+clip_current_selection(folder_name=None) – save EMG/Video clips for the marked range.
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+File Name:trainingModel.py
+Type: Python Script (ctypes + NumPy + LDA via DLL)
+
+Description:
+End-to-end EMG classifier trainer/tester that reads trial .txt files per class, slices them into overlapping windows, extracts time-domain features (MAV, WL, ZC, SSC) via a C DLL (libfunctions.dll), normalizes features, trains a Linear Discriminant Analysis (LDA) model, evaluates accuracy per window, and exports learned parameters (Wg, Cg, xmean, xstd) to a C source file for easy deployment on a microcontroller.
+
+Functions: 
+split_train_test(base_path, split_mode): Build train/test file lists per class; updates internal buffers.
+
+load_trial_data(filepath, label): Parses a trial into interleaved time-major buffer (per-sample, all channels).
+
+generate_windows(): Overlapping windows from traindata using wl/winc.
+
+extract_features(windows, class_idx, start_idx): Calls DLL tdfeats to populate featurematrix and labels.
+
+train_model(folderpath, split_mode=None): Full pipeline—split (optional), window, feature, normalize, LDA train; prints training accuracy.
+
+export_model_to_c_file(filename): Writes Wg_init, Cg_init, xmean_init, xstd_init C arrays.
+
+test_all_trials(): Evaluate on self.testpath; reports overall per-window accuracy.
+
+test_single_trial(filepath, class_idx, return_counts=False): Per-trial test; useful for diagnostics.
+
+save_windows_to_file(windows, class_idx, output_file): Debug dump of raw window samples in readable grid.
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+File Name: trialanalysis.py
+Type: Python Script (analysis/visualization)
+
+Description:
+Tools to evaluate how EMG test trials relate to your trained LDA model by projecting windows into LDA space, computing centroids per training trial, and ranking proximity using Mahalanobis distance. Supports single-trial checks, whole-set comparisons, and a flexible manifest file that mixes actions/objects with arbitrary test paths. Optional heatmaps help spot outliers and overlaps across classes/trials.
+
+Functions: 
+analyze_train_set(): project training windows → LDA, compute trial centroids, store self.centroids, self.trial_names, and a train↔train distance heatmap.
+
+project_to_lda_space(): normalized feature matrix → LDA scores.
+
+_project_single_trial_to_lda(filepath): load one trial, window, extract TD features via DLL, normalize, map to LDA.
+
+compute_mahalanobis_distances(test_vec, reference_matrix): Mahalanobis distance with shared covariance.
+
+analyze_test_and_training_set(testfile_path, plot=True): nearest training trials for one test trial (+ optional bar plot).
+
+analyze_all_tests_vs_training(plot=True): compare all test trials (from the model’s split) to all training centroids; returns sorted matches and draws a heatmap.
+
+analyze_manifest_tests_vs_training(manifest_path, plot=True): parse a manifest (labels + .txt paths), compare each to training centroids, return ranked lists and an optional heatmap.
+

@@ -1,0 +1,506 @@
+2025-11-19 14:42:59,834 - INFO - __main__ - Application starting
+2025-11-19 14:42:59,854 - INFO - __main__ - MainWindow: initializing
+2025-11-19 14:42:59,854 - INFO - __main__ - Folder 'sessions' already exists at: C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions
+2025-11-19 14:42:59,854 - DEBUG - __main__ - MainWindow: window title set
+2025-11-19 14:42:59,854 - DEBUG - __main__ - MainWindow: screen detected, window resized to 960x510
+2025-11-19 14:42:59,854 - DEBUG - __main__ - MainWindow: QStackedWidget created
+2025-11-19 14:42:59,854 - INFO - __main__ - EntryPage: initializing
+2025-11-19 14:42:59,854 - DEBUG - __main__ - EntryPage: layout and widgets created
+2025-11-19 14:42:59,854 - INFO - __main__ - EntryPage: UI built
+2025-11-19 14:42:59,854 - DEBUG - __main__ - MainWindow: EntryPage created
+2025-11-19 14:42:59,854 - INFO - MainPage - MainPage: initializing UI
+2025-11-19 14:42:59,854 - DEBUG - MainPage - MainPage: window title set to 'Main Page'
+2025-11-19 14:42:59,854 - DEBUG - MainPage - MainPage: title label created
+2025-11-19 14:42:59,854 - DEBUG - MainPage - MainPage: continue button created and connected
+2025-11-19 14:42:59,854 - DEBUG - MainPage - MainPage: start button created and connected
+2025-11-19 14:42:59,854 - DEBUG - MainPage - MainPage: back button created and connected
+2025-11-19 14:42:59,854 - DEBUG - MainPage - MainPage: layout set
+2025-11-19 14:42:59,854 - INFO - MainPage - MainPage: UI initialization complete
+2025-11-19 14:42:59,854 - DEBUG - __main__ - MainWindow: MainPage created
+2025-11-19 14:42:59,854 - INFO - SessionPage - SessionPage: initializing UI
+2025-11-19 14:42:59,854 - DEBUG - SessionPage - SessionPage: window title set to 'Session Page'
+2025-11-19 14:42:59,854 - DEBUG - SessionPage - SessionPage: UI components added to layout
+2025-11-19 14:42:59,854 - INFO - SessionPage - SessionPage: UI initialization complete
+2025-11-19 14:42:59,854 - DEBUG - __main__ - MainWindow: SessionPage created
+2025-11-19 14:42:59,854 - DEBUG - CollectionPage - CollectionPage: Initialized with base folder C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions
+2025-11-19 14:42:59,854 - DEBUG - CollectionPage - CollectionPage: Window title set to 'Collection Page'
+2025-11-19 14:43:00,148 - DEBUG - CollectionPage - CollectionPage: UI components added to layout
+2025-11-19 14:43:00,148 - DEBUG - __main__ - MainWindow: CollectionPage created
+2025-11-19 14:43:00,393 - DEBUG - __main__ - MainWindow: pages added to stack
+2025-11-19 14:43:00,393 - DEBUG - __main__ - MainWindow: navigation signals connected
+2025-11-19 14:43:00,394 - DEBUG - __main__ - MainWindow: layout set
+2025-11-19 14:43:00,394 - INFO - __main__ - MainWindow: initialization complete
+2025-11-19 14:43:00,479 - INFO - __main__ - Main window shown
+2025-11-19 14:43:03,256 - INFO - __main__ - EntryPage: 'Enter Application' button clicked
+2025-11-19 14:43:03,256 - INFO - __main__ - Clicked to go to MainPage
+2025-11-19 14:43:04,611 - INFO - MainPage - MainPage: 'Start New Session' button clicked
+2025-11-19 14:43:08,345 - INFO - FolderMangerClass - Folder 'checktest' created at 'C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\checktest'.
+2025-11-19 14:43:08,345 - INFO - MainPage - MainPage: Session folder created -> C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\checktest
+2025-11-19 14:43:09,460 - WARNING - root - Settings file not found at C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\checktest\settings.json. Using default settings.
+2025-11-19 14:43:09,461 - INFO - MainPage - MainPage: Session 'checktest' created successfully, emitting go_to_session signal
+2025-11-19 14:43:09,461 - INFO - __main__ - Clicked to go to SessionPage
+2025-11-19 14:43:09,461 - DEBUG - __main__ - MainWindow: Creating SessionSetting for session folder: C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\checktest
+2025-11-19 14:43:09,469 - INFO - __main__ - SessionSetting created for session folder: C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\checktest
+2025-11-19 14:43:09,469 - INFO - SessionPage - SessionPage: Loading session from folder: C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\checktest
+2025-11-19 14:43:09,469 - INFO - FolderMangerClass - Folder 'C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\checktest' files: ['settings.json']
+2025-11-19 14:43:09,469 - INFO - FolderMangerClass - Folder 'C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\checktest' subfolders (first 3 items): {}
+2025-11-19 14:43:09,471 - DEBUG - MainPage - MainPage: go_to_session signal emitted
+2025-11-19 14:43:11,250 - INFO - SessionPage - SessionPage: Go to Collection Page button clicked
+2025-11-19 14:43:11,250 - INFO - __main__ - Clicked to go to CollectionPage
+2025-11-19 14:43:11,250 - INFO - CollectionPage - CollectionPage: Loaded session folder C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\checktest
+2025-11-19 14:43:11,251 - INFO - SessionPage - SessionPage: Emitted signal to go to collection page
+2025-11-19 14:43:14,081 - INFO - CollectionPage - CollectionPage: Start EMG button clicked
+2025-11-19 14:43:14,081 - ERROR - SerialClassFile - \u274c Failed to open serial port COM8: could not open port 'COM8': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)
+2025-11-19 14:43:14,082 - ERROR - CollectionPage - CollectionPage: Failed to start EMG serial
+2025-11-19 14:43:35,918 - INFO - __main__ - Application exiting with code 0
+2025-11-19 14:43:38,013 - INFO - __main__ - Application starting
+2025-11-19 14:43:38,029 - INFO - __main__ - MainWindow: initializing
+2025-11-19 14:43:38,029 - INFO - __main__ - Folder 'sessions' already exists at: C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions
+2025-11-19 14:43:38,029 - DEBUG - __main__ - MainWindow: window title set
+2025-11-19 14:43:38,029 - DEBUG - __main__ - MainWindow: screen detected, window resized to 960x510
+2025-11-19 14:43:38,029 - DEBUG - __main__ - MainWindow: QStackedWidget created
+2025-11-19 14:43:38,029 - INFO - __main__ - EntryPage: initializing
+2025-11-19 14:43:38,029 - DEBUG - __main__ - EntryPage: layout and widgets created
+2025-11-19 14:43:38,029 - INFO - __main__ - EntryPage: UI built
+2025-11-19 14:43:38,029 - DEBUG - __main__ - MainWindow: EntryPage created
+2025-11-19 14:43:38,029 - INFO - MainPage - MainPage: initializing UI
+2025-11-19 14:43:38,029 - DEBUG - MainPage - MainPage: window title set to 'Main Page'
+2025-11-19 14:43:38,029 - DEBUG - MainPage - MainPage: title label created
+2025-11-19 14:43:38,029 - DEBUG - MainPage - MainPage: continue button created and connected
+2025-11-19 14:43:38,029 - DEBUG - MainPage - MainPage: start button created and connected
+2025-11-19 14:43:38,029 - DEBUG - MainPage - MainPage: back button created and connected
+2025-11-19 14:43:38,029 - DEBUG - MainPage - MainPage: layout set
+2025-11-19 14:43:38,029 - INFO - MainPage - MainPage: UI initialization complete
+2025-11-19 14:43:38,029 - DEBUG - __main__ - MainWindow: MainPage created
+2025-11-19 14:43:38,029 - INFO - SessionPage - SessionPage: initializing UI
+2025-11-19 14:43:38,029 - DEBUG - SessionPage - SessionPage: window title set to 'Session Page'
+2025-11-19 14:43:38,029 - DEBUG - SessionPage - SessionPage: UI components added to layout
+2025-11-19 14:43:38,029 - INFO - SessionPage - SessionPage: UI initialization complete
+2025-11-19 14:43:38,029 - DEBUG - __main__ - MainWindow: SessionPage created
+2025-11-19 14:43:38,029 - DEBUG - CollectionPage - CollectionPage: Initialized with base folder C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions
+2025-11-19 14:43:38,029 - DEBUG - CollectionPage - CollectionPage: Window title set to 'Collection Page'
+2025-11-19 14:43:38,291 - DEBUG - CollectionPage - CollectionPage: UI components added to layout
+2025-11-19 14:43:38,291 - DEBUG - __main__ - MainWindow: CollectionPage created
+2025-11-19 14:43:38,522 - DEBUG - __main__ - MainWindow: pages added to stack
+2025-11-19 14:43:38,538 - DEBUG - __main__ - MainWindow: navigation signals connected
+2025-11-19 14:43:38,538 - DEBUG - __main__ - MainWindow: layout set
+2025-11-19 14:43:38,538 - INFO - __main__ - MainWindow: initialization complete
+2025-11-19 14:43:38,630 - INFO - __main__ - Main window shown
+2025-11-19 14:43:39,600 - INFO - __main__ - EntryPage: 'Enter Application' button clicked
+2025-11-19 14:43:39,600 - INFO - __main__ - Clicked to go to MainPage
+2025-11-19 14:43:42,720 - INFO - MainPage - MainPage: 'Continue Previous Session' button clicked
+2025-11-19 14:43:43,657 - INFO - MainPage - MainPage: User selected session 'checktest' to continue
+2025-11-19 14:43:44,388 - INFO - MainPage - MainPage: Emitting go_to_session signal with session folder path: C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\checktest
+2025-11-19 14:43:44,388 - INFO - __main__ - Clicked to go to SessionPage
+2025-11-19 14:43:44,388 - DEBUG - __main__ - MainWindow: Creating SessionSetting for session folder: C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\checktest
+2025-11-19 14:43:44,390 - INFO - __main__ - SessionSetting created for session folder: C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\checktest
+2025-11-19 14:43:44,390 - INFO - SessionPage - SessionPage: Loading session from folder: C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\checktest
+2025-11-19 14:43:44,390 - INFO - FolderMangerClass - Folder 'C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\checktest' files: ['settings.json']
+2025-11-19 14:43:44,390 - INFO - FolderMangerClass - Folder 'C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\checktest' subfolders (first 3 items): {}
+2025-11-19 14:43:44,391 - DEBUG - MainPage - MainPage: go_to_session signal emitted
+2025-11-19 14:43:45,827 - INFO - SessionPage - SessionPage: Go to Collection Page button clicked
+2025-11-19 14:43:45,828 - INFO - __main__ - Clicked to go to CollectionPage
+2025-11-19 14:43:45,828 - INFO - CollectionPage - CollectionPage: Loaded session folder C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\checktest
+2025-11-19 14:43:45,829 - INFO - SessionPage - SessionPage: Emitted signal to go to collection page
+2025-11-19 14:43:47,154 - INFO - CollectionPage - CollectionPage: Start EMG button clicked
+2025-11-19 14:43:47,171 - INFO - SerialClassFile - \u2705 Serial port COM9 opened at 500000.
+2025-11-19 14:43:47,171 - INFO - SerialClassFile - \u25b6\ufe0f Sent 'z' to microcontroller to start EMG streaming.
+2025-11-19 14:43:47,172 - DEBUG - SerialClassFile - SerialEMGClass: read loop started.
+2025-11-19 14:44:31,492 - INFO - CollectionPage - CollectionPage: Back to Session Page button clicked
+2025-11-19 14:44:31,492 - INFO - CameraClassFile - CameraClass: stopping camera...
+2025-11-19 14:44:31,492 - INFO - CameraClassFile - \U0001f4f7 CameraClass: camera stopped and resources released.
+2025-11-19 14:44:31,493 - INFO - SerialClassFile - \U0001f6d1 SerialEMGClass: stopping serial handler...
+2025-11-19 14:44:31,493 - INFO - SerialClassFile - \u25b6\ufe0f Sent 'v' to microcontroller to stop EMG streaming.
+2025-11-19 14:44:31,493 - DEBUG - SerialClassFile - SerialEMGClass: read loop exited.
+2025-11-19 14:44:31,493 - INFO - SerialClassFile - \U0001f50c Serial port closed.
+2025-11-19 14:44:31,494 - INFO - __main__ - Clicked to go to SessionPage
+2025-11-19 14:44:31,494 - DEBUG - __main__ - MainWindow: Creating SessionSetting for session folder: C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\checktest
+2025-11-19 14:44:31,496 - INFO - __main__ - SessionSetting created for session folder: C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\checktest
+2025-11-19 14:44:31,496 - INFO - SessionPage - SessionPage: Loading session from folder: C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\checktest
+2025-11-19 14:44:31,496 - INFO - FolderMangerClass - Folder 'C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\checktest' files: ['settings.json']
+2025-11-19 14:44:31,496 - INFO - FolderMangerClass - Folder 'C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\checktest' subfolders (first 3 items): {}
+2025-11-19 14:44:32,685 - INFO - __main__ - Application exiting with code 0
+2025-11-24 20:38:26,529 - INFO - __main__ - Application starting
+2025-11-24 20:38:26,549 - INFO - __main__ - MainWindow: initializing
+2025-11-24 20:38:26,549 - INFO - __main__ - Folder 'sessions' created at: C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions
+2025-11-24 20:38:26,549 - DEBUG - __main__ - MainWindow: window title set
+2025-11-24 20:38:26,554 - DEBUG - __main__ - MainWindow: screen detected, window resized to 960x510
+2025-11-24 20:38:26,554 - DEBUG - __main__ - MainWindow: QStackedWidget created
+2025-11-24 20:38:26,554 - INFO - __main__ - EntryPage: initializing
+2025-11-24 20:38:26,554 - DEBUG - __main__ - EntryPage: layout and widgets created
+2025-11-24 20:38:26,554 - INFO - __main__ - EntryPage: UI built
+2025-11-24 20:38:26,554 - DEBUG - __main__ - MainWindow: EntryPage created
+2025-11-24 20:38:26,554 - INFO - MainPage - MainPage: initializing UI
+2025-11-24 20:38:26,557 - DEBUG - MainPage - MainPage: window title set to 'Main Page'
+2025-11-24 20:38:26,557 - DEBUG - MainPage - MainPage: title label created
+2025-11-24 20:38:26,557 - DEBUG - MainPage - MainPage: continue button created and connected
+2025-11-24 20:38:26,557 - DEBUG - MainPage - MainPage: start button created and connected
+2025-11-24 20:38:26,557 - DEBUG - MainPage - MainPage: back button created and connected
+2025-11-24 20:38:26,557 - DEBUG - MainPage - MainPage: layout set
+2025-11-24 20:38:26,557 - INFO - MainPage - MainPage: UI initialization complete
+2025-11-24 20:38:26,557 - DEBUG - __main__ - MainWindow: MainPage created
+2025-11-24 20:38:26,557 - INFO - SessionPage - SessionPage: initializing UI
+2025-11-24 20:38:26,557 - DEBUG - SessionPage - SessionPage: window title set to 'Session Page'
+2025-11-24 20:38:26,562 - DEBUG - SessionPage - SessionPage: UI components added to layout
+2025-11-24 20:38:26,562 - INFO - SessionPage - SessionPage: UI initialization complete
+2025-11-24 20:38:26,562 - DEBUG - __main__ - MainWindow: SessionPage created
+2025-11-24 20:38:26,562 - DEBUG - CollectionPage - CollectionPage: Initialized with base folder C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions
+2025-11-24 20:38:26,562 - DEBUG - CollectionPage - CollectionPage: Window title set to 'Collection Page'
+2025-11-24 20:38:26,860 - DEBUG - CollectionPage - CollectionPage: UI components added to layout
+2025-11-24 20:38:26,860 - DEBUG - __main__ - MainWindow: CollectionPage created
+2025-11-24 20:38:27,117 - DEBUG - __main__ - MainWindow: pages added to stack
+2025-11-24 20:38:27,117 - DEBUG - __main__ - MainWindow: navigation signals connected
+2025-11-24 20:38:27,117 - DEBUG - __main__ - MainWindow: layout set
+2025-11-24 20:38:27,117 - INFO - __main__ - MainWindow: initialization complete
+2025-11-24 20:38:27,320 - INFO - __main__ - Main window shown
+2025-11-24 20:38:43,342 - INFO - __main__ - Application exiting with code 0
+2025-11-24 20:38:53,008 - INFO - __main__ - Application starting
+2025-11-24 20:38:53,017 - INFO - __main__ - MainWindow: initializing
+2025-11-24 20:38:53,017 - INFO - __main__ - Folder 'sessions' already exists at: C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions
+2025-11-24 20:38:53,017 - DEBUG - __main__ - MainWindow: window title set
+2025-11-24 20:38:53,017 - DEBUG - __main__ - MainWindow: screen detected, window resized to 960x510
+2025-11-24 20:38:53,017 - DEBUG - __main__ - MainWindow: QStackedWidget created
+2025-11-24 20:38:53,017 - INFO - __main__ - EntryPage: initializing
+2025-11-24 20:38:53,017 - DEBUG - __main__ - EntryPage: layout and widgets created
+2025-11-24 20:38:53,017 - INFO - __main__ - EntryPage: UI built
+2025-11-24 20:38:53,017 - DEBUG - __main__ - MainWindow: EntryPage created
+2025-11-24 20:38:53,017 - INFO - MainPage - MainPage: initializing UI
+2025-11-24 20:38:53,017 - DEBUG - MainPage - MainPage: window title set to 'Main Page'
+2025-11-24 20:38:53,017 - DEBUG - MainPage - MainPage: title label created
+2025-11-24 20:38:53,017 - DEBUG - MainPage - MainPage: continue button created and connected
+2025-11-24 20:38:53,017 - DEBUG - MainPage - MainPage: start button created and connected
+2025-11-24 20:38:53,017 - DEBUG - MainPage - MainPage: back button created and connected
+2025-11-24 20:38:53,017 - DEBUG - MainPage - MainPage: layout set
+2025-11-24 20:38:53,017 - INFO - MainPage - MainPage: UI initialization complete
+2025-11-24 20:38:53,017 - DEBUG - __main__ - MainWindow: MainPage created
+2025-11-24 20:38:53,017 - INFO - SessionPage - SessionPage: initializing UI
+2025-11-24 20:38:53,017 - DEBUG - SessionPage - SessionPage: window title set to 'Session Page'
+2025-11-24 20:38:53,024 - DEBUG - SessionPage - SessionPage: UI components added to layout
+2025-11-24 20:38:53,024 - INFO - SessionPage - SessionPage: UI initialization complete
+2025-11-24 20:38:53,024 - DEBUG - __main__ - MainWindow: SessionPage created
+2025-11-24 20:38:53,024 - DEBUG - CollectionPage - CollectionPage: Initialized with base folder C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions
+2025-11-24 20:38:53,024 - DEBUG - CollectionPage - CollectionPage: Window title set to 'Collection Page'
+2025-11-24 20:38:53,308 - DEBUG - CollectionPage - CollectionPage: UI components added to layout
+2025-11-24 20:38:53,308 - DEBUG - __main__ - MainWindow: CollectionPage created
+2025-11-24 20:38:53,537 - DEBUG - __main__ - MainWindow: pages added to stack
+2025-11-24 20:38:53,537 - DEBUG - __main__ - MainWindow: navigation signals connected
+2025-11-24 20:38:53,537 - DEBUG - __main__ - MainWindow: layout set
+2025-11-24 20:38:53,538 - INFO - __main__ - MainWindow: initialization complete
+2025-11-24 20:38:53,724 - INFO - __main__ - Main window shown
+2025-11-24 20:38:59,494 - INFO - __main__ - EntryPage: 'Enter Application' button clicked
+2025-11-24 20:38:59,494 - INFO - __main__ - Clicked to go to MainPage
+2025-11-24 20:39:00,657 - INFO - MainPage - MainPage: 'Continue Previous Session' button clicked
+2025-11-24 20:39:00,657 - WARNING - MainPage - MainPage: No existing sessions found
+2025-11-24 20:39:02,768 - INFO - MainPage - MainPage: 'Start New Session' button clicked
+2025-11-24 20:39:06,043 - INFO - FolderMangerClass - Folder 'hello' created at 'C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello'.
+2025-11-24 20:39:06,043 - INFO - MainPage - MainPage: Session folder created -> C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello
+2025-11-24 20:39:07,571 - WARNING - root - Settings file not found at C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello\settings.json. Using default settings.
+2025-11-24 20:39:07,573 - INFO - MainPage - MainPage: Session 'hello' created successfully, emitting go_to_session signal
+2025-11-24 20:39:07,573 - INFO - __main__ - Clicked to go to SessionPage
+2025-11-24 20:39:07,573 - DEBUG - __main__ - MainWindow: Creating SessionSetting for session folder: C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello
+2025-11-24 20:39:07,583 - INFO - __main__ - SessionSetting created for session folder: C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello
+2025-11-24 20:39:07,583 - INFO - SessionPage - SessionPage: Loading session from folder: C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello
+2025-11-24 20:39:07,583 - INFO - FolderMangerClass - Folder 'C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello' files: ['settings.json']
+2025-11-24 20:39:07,583 - INFO - FolderMangerClass - Folder 'C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello' subfolders (first 3 items): {}
+2025-11-24 20:39:07,596 - DEBUG - MainPage - MainPage: go_to_session signal emitted
+2025-11-24 20:39:10,347 - INFO - SessionPage - SessionPage: Go to Collection Page button clicked
+2025-11-24 20:39:10,347 - INFO - __main__ - Clicked to go to CollectionPage
+2025-11-24 20:39:10,347 - INFO - CollectionPage - CollectionPage: Loaded session folder C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello
+2025-11-24 20:39:10,361 - INFO - SessionPage - SessionPage: Emitted signal to go to collection page
+2025-11-24 20:39:13,776 - INFO - CollectionPage - CollectionPage: Start EMG button clicked
+2025-11-24 20:39:13,793 - INFO - SerialClassFile - \u2705 Serial port COM9 opened at 500000.
+2025-11-24 20:39:13,802 - INFO - SerialClassFile - \u25b6\ufe0f Sent 'z' to microcontroller to start EMG streaming.
+2025-11-24 20:39:13,803 - DEBUG - SerialClassFile - SerialEMGClass: read loop started.
+2025-11-24 20:41:49,925 - INFO - CollectionPage - Batch EMG setup complete. Set root: C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello\EMG\Set-11-24-2025, Actions: 6, Trials per Action: 6
+2025-11-24 20:41:53,089 - INFO - CollectionPage - Starting trial recording: Set 1, Action1, Trial 1 -> trial_1.csv
+2025-11-24 20:41:53,100 - INFO - SerialClassFile - SerialEMGClass: started EMG recording to C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello\EMG\Set-11-24-2025\Training\Action1\trial_1.csv
+2025-11-24 20:41:54,071 - INFO - SerialClassFile - SerialEMGClass: reached record limit (1000 rows), stopping recording.
+2025-11-24 20:41:54,071 - INFO - SerialClassFile - SerialEMGClass: stopping EMG recording after 1000 rows.
+2025-11-24 20:42:09,957 - WARNING - CollectionPage - CollectionPage: No EMG recording in progress to stop
+2025-11-24 20:42:09,957 - INFO - CollectionPage - Next trial index -> Set 1, Action 1, Trial 2
+2025-11-24 20:42:12,043 - INFO - CollectionPage - Starting trial recording: Set 1, Action1, Trial 2 -> trial_2.csv
+2025-11-24 20:42:12,044 - INFO - SerialClassFile - SerialEMGClass: started EMG recording to C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello\EMG\Set-11-24-2025\Training\Action1\trial_2.csv
+2025-11-24 20:42:13,033 - INFO - SerialClassFile - SerialEMGClass: reached record limit (1000 rows), stopping recording.
+2025-11-24 20:42:13,033 - INFO - SerialClassFile - SerialEMGClass: stopping EMG recording after 1000 rows.
+2025-11-24 20:42:16,002 - WARNING - CollectionPage - CollectionPage: No EMG recording in progress to stop
+2025-11-24 20:42:16,003 - INFO - CollectionPage - Next trial index -> Set 1, Action 1, Trial 3
+2025-11-24 20:42:18,580 - INFO - __main__ - Application exiting with code 0
+2025-11-24 21:05:53,813 - INFO - __main__ - Application starting
+2025-11-24 21:05:53,828 - INFO - __main__ - MainWindow: initializing
+2025-11-24 21:05:53,828 - INFO - __main__ - Folder 'sessions' created at: C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions
+2025-11-24 21:05:53,828 - DEBUG - __main__ - MainWindow: window title set
+2025-11-24 21:05:53,828 - DEBUG - __main__ - MainWindow: screen detected, window resized to 960x510
+2025-11-24 21:05:53,829 - DEBUG - __main__ - MainWindow: QStackedWidget created
+2025-11-24 21:05:53,829 - INFO - __main__ - EntryPage: initializing
+2025-11-24 21:05:53,829 - DEBUG - __main__ - EntryPage: layout and widgets created
+2025-11-24 21:05:53,829 - INFO - __main__ - EntryPage: UI built
+2025-11-24 21:05:53,829 - DEBUG - __main__ - MainWindow: EntryPage created
+2025-11-24 21:05:53,829 - INFO - MainPage - MainPage: initializing UI
+2025-11-24 21:05:53,829 - DEBUG - MainPage - MainPage: window title set to 'Main Page'
+2025-11-24 21:05:53,829 - DEBUG - MainPage - MainPage: title label created
+2025-11-24 21:05:53,829 - DEBUG - MainPage - MainPage: continue button created and connected
+2025-11-24 21:05:53,829 - DEBUG - MainPage - MainPage: start button created and connected
+2025-11-24 21:05:53,829 - DEBUG - MainPage - MainPage: back button created and connected
+2025-11-24 21:05:53,829 - DEBUG - MainPage - MainPage: layout set
+2025-11-24 21:05:53,829 - INFO - MainPage - MainPage: UI initialization complete
+2025-11-24 21:05:53,829 - DEBUG - __main__ - MainWindow: MainPage created
+2025-11-24 21:05:53,829 - INFO - SessionPage - SessionPage: initializing UI
+2025-11-24 21:05:53,829 - DEBUG - SessionPage - SessionPage: window title set to 'Session Page'
+2025-11-24 21:05:53,831 - DEBUG - SessionPage - SessionPage: UI components added to layout
+2025-11-24 21:05:53,831 - INFO - SessionPage - SessionPage: UI initialization complete
+2025-11-24 21:05:53,831 - DEBUG - __main__ - MainWindow: SessionPage created
+2025-11-24 21:05:53,831 - DEBUG - CollectionPage - CollectionPage: Initialized with base folder C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions
+2025-11-24 21:05:53,831 - DEBUG - CollectionPage - CollectionPage: Window title set to 'Collection Page'
+2025-11-24 21:05:54,138 - DEBUG - CollectionPage - CollectionPage: UI components added to layout
+2025-11-24 21:05:54,138 - DEBUG - __main__ - MainWindow: CollectionPage created
+2025-11-24 21:05:54,415 - DEBUG - __main__ - MainWindow: pages added to stack
+2025-11-24 21:05:54,415 - DEBUG - __main__ - MainWindow: navigation signals connected
+2025-11-24 21:05:54,415 - DEBUG - __main__ - MainWindow: layout set
+2025-11-24 21:05:54,415 - INFO - __main__ - MainWindow: initialization complete
+2025-11-24 21:05:54,626 - INFO - __main__ - Main window shown
+2025-11-24 21:05:57,465 - INFO - __main__ - EntryPage: 'Enter Application' button clicked
+2025-11-24 21:05:57,465 - INFO - __main__ - Clicked to go to MainPage
+2025-11-24 21:05:58,350 - INFO - MainPage - MainPage: 'Continue Previous Session' button clicked
+2025-11-24 21:05:58,350 - WARNING - MainPage - MainPage: No existing sessions found
+2025-11-24 21:06:00,180 - INFO - MainPage - MainPage: 'Start New Session' button clicked
+2025-11-24 21:06:04,788 - INFO - FolderMangerClass - Folder 'hello' created at 'C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello'.
+2025-11-24 21:06:04,788 - INFO - MainPage - MainPage: Session folder created -> C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello
+2025-11-24 21:06:06,337 - WARNING - root - Settings file not found at C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello\settings.json. Using default settings.
+2025-11-24 21:06:06,339 - INFO - MainPage - MainPage: Session 'hello' created successfully, emitting go_to_session signal
+2025-11-24 21:06:06,339 - INFO - __main__ - Clicked to go to SessionPage
+2025-11-24 21:06:06,339 - DEBUG - __main__ - MainWindow: Creating SessionSetting for session folder: C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello
+2025-11-24 21:06:06,342 - INFO - __main__ - SessionSetting created for session folder: C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello
+2025-11-24 21:06:06,342 - INFO - SessionPage - SessionPage: Loading session from folder: C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello
+2025-11-24 21:06:06,342 - INFO - FolderMangerClass - Folder 'C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello' files: ['settings.json']
+2025-11-24 21:06:06,342 - INFO - FolderMangerClass - Folder 'C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello' subfolders (first 3 items): {}
+2025-11-24 21:06:06,344 - DEBUG - MainPage - MainPage: go_to_session signal emitted
+2025-11-24 21:06:07,959 - INFO - SessionPage - SessionPage: Go to Collection Page button clicked
+2025-11-24 21:06:07,959 - INFO - __main__ - Clicked to go to CollectionPage
+2025-11-24 21:06:07,959 - INFO - CollectionPage - CollectionPage: Loaded session folder C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello
+2025-11-24 21:06:07,961 - INFO - SessionPage - SessionPage: Emitted signal to go to collection page
+2025-11-24 21:06:11,910 - INFO - CollectionPage - CollectionPage: Start EMG button clicked
+2025-11-24 21:06:11,927 - INFO - SerialClassFile - \u2705 Serial port COM9 opened at 500000.
+2025-11-24 21:06:11,928 - INFO - SerialClassFile - \u25b6\ufe0f Sent 'z' to microcontroller to start EMG streaming.
+2025-11-24 21:06:11,928 - DEBUG - SerialClassFile - SerialEMGClass: read loop started.
+2025-11-24 21:11:38,069 - INFO - __main__ - Application exiting with code 0
+2025-11-24 21:12:04,663 - INFO - __main__ - Application starting
+2025-11-24 21:12:04,678 - INFO - __main__ - MainWindow: initializing
+2025-11-24 21:12:04,678 - INFO - __main__ - Folder 'sessions' already exists at: C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions
+2025-11-24 21:12:04,678 - DEBUG - __main__ - MainWindow: window title set
+2025-11-24 21:12:04,678 - DEBUG - __main__ - MainWindow: screen detected, window resized to 960x510
+2025-11-24 21:12:04,678 - DEBUG - __main__ - MainWindow: QStackedWidget created
+2025-11-24 21:12:04,678 - INFO - __main__ - EntryPage: initializing
+2025-11-24 21:12:04,678 - DEBUG - __main__ - EntryPage: layout and widgets created
+2025-11-24 21:12:04,678 - INFO - __main__ - EntryPage: UI built
+2025-11-24 21:12:04,678 - DEBUG - __main__ - MainWindow: EntryPage created
+2025-11-24 21:12:04,678 - INFO - MainPage - MainPage: initializing UI
+2025-11-24 21:12:04,678 - DEBUG - MainPage - MainPage: window title set to 'Main Page'
+2025-11-24 21:12:04,678 - DEBUG - MainPage - MainPage: title label created
+2025-11-24 21:12:04,678 - DEBUG - MainPage - MainPage: continue button created and connected
+2025-11-24 21:12:04,678 - DEBUG - MainPage - MainPage: start button created and connected
+2025-11-24 21:12:04,678 - DEBUG - MainPage - MainPage: back button created and connected
+2025-11-24 21:12:04,678 - DEBUG - MainPage - MainPage: layout set
+2025-11-24 21:12:04,678 - INFO - MainPage - MainPage: UI initialization complete
+2025-11-24 21:12:04,678 - DEBUG - __main__ - MainWindow: MainPage created
+2025-11-24 21:12:04,678 - INFO - SessionPage - SessionPage: initializing UI
+2025-11-24 21:12:04,678 - DEBUG - SessionPage - SessionPage: window title set to 'Session Page'
+2025-11-24 21:12:04,678 - DEBUG - SessionPage - SessionPage: UI components added to layout
+2025-11-24 21:12:04,678 - INFO - SessionPage - SessionPage: UI initialization complete
+2025-11-24 21:12:04,678 - DEBUG - __main__ - MainWindow: SessionPage created
+2025-11-24 21:12:04,678 - DEBUG - CollectionPage - CollectionPage: Initialized with base folder C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions
+2025-11-24 21:12:04,678 - DEBUG - CollectionPage - CollectionPage: Window title set to 'Collection Page'
+2025-11-24 21:12:05,017 - DEBUG - CollectionPage - CollectionPage: UI components added to layout
+2025-11-24 21:12:05,017 - DEBUG - __main__ - MainWindow: CollectionPage created
+2025-11-24 21:12:05,304 - DEBUG - __main__ - MainWindow: pages added to stack
+2025-11-24 21:12:05,304 - DEBUG - __main__ - MainWindow: navigation signals connected
+2025-11-24 21:12:05,304 - DEBUG - __main__ - MainWindow: layout set
+2025-11-24 21:12:05,304 - INFO - __main__ - MainWindow: initialization complete
+2025-11-24 21:12:05,485 - INFO - __main__ - Main window shown
+2025-11-24 21:12:08,290 - INFO - __main__ - EntryPage: 'Enter Application' button clicked
+2025-11-24 21:12:08,290 - INFO - __main__ - Clicked to go to MainPage
+2025-11-24 21:12:09,362 - INFO - MainPage - MainPage: 'Continue Previous Session' button clicked
+2025-11-24 21:12:10,319 - INFO - MainPage - MainPage: User selected session 'hello' to continue
+2025-11-24 21:12:11,339 - INFO - MainPage - MainPage: Emitting go_to_session signal with session folder path: C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello
+2025-11-24 21:12:11,339 - INFO - __main__ - Clicked to go to SessionPage
+2025-11-24 21:12:11,339 - DEBUG - __main__ - MainWindow: Creating SessionSetting for session folder: C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello
+2025-11-24 21:12:11,341 - INFO - __main__ - SessionSetting created for session folder: C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello
+2025-11-24 21:12:11,341 - INFO - SessionPage - SessionPage: Loading session from folder: C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello
+2025-11-24 21:12:11,341 - INFO - FolderMangerClass - Folder 'C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello' files: ['settings.json']
+2025-11-24 21:12:11,342 - INFO - FolderMangerClass - Folder 'C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello' subfolders (first 3 items): {}
+2025-11-24 21:12:11,343 - DEBUG - MainPage - MainPage: go_to_session signal emitted
+2025-11-24 21:12:13,052 - INFO - SessionPage - SessionPage: Go to Collection Page button clicked
+2025-11-24 21:12:13,052 - INFO - __main__ - Clicked to go to CollectionPage
+2025-11-24 21:12:13,052 - INFO - CollectionPage - CollectionPage: Loaded session folder C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello
+2025-11-24 21:12:13,054 - INFO - SessionPage - SessionPage: Emitted signal to go to collection page
+2025-11-24 21:12:14,629 - INFO - CollectionPage - CollectionPage: Start EMG button clicked
+2025-11-24 21:12:14,645 - INFO - SerialClassFile - \u2705 Serial port COM9 opened at 500000.
+2025-11-24 21:12:14,645 - INFO - SerialClassFile - \u25b6\ufe0f Sent 'z' to microcontroller to start EMG streaming.
+2025-11-24 21:12:14,645 - DEBUG - SerialClassFile - SerialEMGClass: read loop started.
+2025-11-24 21:16:11,448 - INFO - __main__ - Application exiting with code 0
+2025-11-24 21:18:32,921 - INFO - __main__ - Application starting
+2025-11-24 21:18:32,935 - INFO - __main__ - MainWindow: initializing
+2025-11-24 21:18:32,936 - INFO - __main__ - Folder 'sessions' already exists at: C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions
+2025-11-24 21:18:32,936 - DEBUG - __main__ - MainWindow: window title set
+2025-11-24 21:18:32,936 - DEBUG - __main__ - MainWindow: screen detected, window resized to 960x510
+2025-11-24 21:18:32,936 - DEBUG - __main__ - MainWindow: QStackedWidget created
+2025-11-24 21:18:32,936 - INFO - __main__ - EntryPage: initializing
+2025-11-24 21:18:32,937 - DEBUG - __main__ - EntryPage: layout and widgets created
+2025-11-24 21:18:32,937 - INFO - __main__ - EntryPage: UI built
+2025-11-24 21:18:32,937 - DEBUG - __main__ - MainWindow: EntryPage created
+2025-11-24 21:18:32,937 - INFO - MainPage - MainPage: initializing UI
+2025-11-24 21:18:32,937 - DEBUG - MainPage - MainPage: window title set to 'Main Page'
+2025-11-24 21:18:32,937 - DEBUG - MainPage - MainPage: title label created
+2025-11-24 21:18:32,937 - DEBUG - MainPage - MainPage: continue button created and connected
+2025-11-24 21:18:32,937 - DEBUG - MainPage - MainPage: start button created and connected
+2025-11-24 21:18:32,937 - DEBUG - MainPage - MainPage: back button created and connected
+2025-11-24 21:18:32,937 - DEBUG - MainPage - MainPage: layout set
+2025-11-24 21:18:32,937 - INFO - MainPage - MainPage: UI initialization complete
+2025-11-24 21:18:32,937 - DEBUG - __main__ - MainWindow: MainPage created
+2025-11-24 21:18:32,937 - INFO - SessionPage - SessionPage: initializing UI
+2025-11-24 21:18:32,937 - DEBUG - SessionPage - SessionPage: window title set to 'Session Page'
+2025-11-24 21:18:32,937 - DEBUG - SessionPage - SessionPage: UI components added to layout
+2025-11-24 21:18:32,937 - INFO - SessionPage - SessionPage: UI initialization complete
+2025-11-24 21:18:32,937 - DEBUG - __main__ - MainWindow: SessionPage created
+2025-11-24 21:18:32,937 - DEBUG - CollectionPage - CollectionPage: Initialized with base folder C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions
+2025-11-24 21:18:32,937 - DEBUG - CollectionPage - CollectionPage: Window title set to 'Collection Page'
+2025-11-24 21:18:33,268 - DEBUG - CollectionPage - CollectionPage: UI components added to layout
+2025-11-24 21:18:33,268 - DEBUG - __main__ - MainWindow: CollectionPage created
+2025-11-24 21:18:33,548 - DEBUG - __main__ - MainWindow: pages added to stack
+2025-11-24 21:18:33,548 - DEBUG - __main__ - MainWindow: navigation signals connected
+2025-11-24 21:18:33,548 - DEBUG - __main__ - MainWindow: layout set
+2025-11-24 21:18:33,549 - INFO - __main__ - MainWindow: initialization complete
+2025-11-24 21:18:33,754 - INFO - __main__ - Main window shown
+2025-11-24 21:18:36,367 - INFO - __main__ - EntryPage: 'Enter Application' button clicked
+2025-11-24 21:18:36,367 - INFO - __main__ - Clicked to go to MainPage
+2025-11-24 21:18:37,821 - INFO - MainPage - MainPage: 'Continue Previous Session' button clicked
+2025-11-24 21:18:38,846 - INFO - MainPage - MainPage: User selected session 'hello' to continue
+2025-11-24 21:18:39,832 - INFO - MainPage - MainPage: Emitting go_to_session signal with session folder path: C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello
+2025-11-24 21:18:39,832 - INFO - __main__ - Clicked to go to SessionPage
+2025-11-24 21:18:39,832 - DEBUG - __main__ - MainWindow: Creating SessionSetting for session folder: C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello
+2025-11-24 21:18:39,834 - INFO - __main__ - SessionSetting created for session folder: C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello
+2025-11-24 21:18:39,835 - INFO - SessionPage - SessionPage: Loading session from folder: C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello
+2025-11-24 21:18:39,835 - INFO - FolderMangerClass - Folder 'C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello' files: ['settings.json']
+2025-11-24 21:18:39,835 - INFO - FolderMangerClass - Folder 'C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello' subfolders (first 3 items): {}
+2025-11-24 21:18:39,837 - DEBUG - MainPage - MainPage: go_to_session signal emitted
+2025-11-24 21:18:41,204 - INFO - SessionPage - SessionPage: Go to Collection Page button clicked
+2025-11-24 21:18:41,204 - INFO - __main__ - Clicked to go to CollectionPage
+2025-11-24 21:18:41,204 - INFO - CollectionPage - CollectionPage: Loaded session folder C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello
+2025-11-24 21:18:41,205 - INFO - SessionPage - SessionPage: Emitted signal to go to collection page
+2025-11-24 21:18:43,138 - INFO - CollectionPage - CollectionPage: Start EMG button clicked
+2025-11-24 21:18:43,155 - INFO - SerialClassFile - \u2705 Serial port COM9 opened at 500000.
+2025-11-24 21:18:43,155 - INFO - SerialClassFile - \u25b6\ufe0f Sent 'z' to microcontroller to start EMG streaming.
+2025-11-24 21:18:43,155 - DEBUG - SerialClassFile - SerialEMGClass: read loop started.
+2025-11-24 21:20:54,206 - INFO - CollectionPage - CollectionPage: Stop EMG button clicked
+2025-11-24 21:20:54,207 - INFO - SerialClassFile - \U0001f6d1 SerialEMGClass: stopping serial handler...
+2025-11-24 21:20:54,207 - INFO - SerialClassFile - \u25b6\ufe0f Sent 'v' to microcontroller to stop EMG streaming.
+2025-11-24 21:20:54,207 - DEBUG - SerialClassFile - SerialEMGClass: read loop exited.
+2025-11-24 21:20:54,209 - INFO - SerialClassFile - \U0001f50c Serial port closed.
+2025-11-24 21:20:56,118 - INFO - __main__ - Application exiting with code 0
+2025-11-24 21:21:00,330 - INFO - __main__ - Application starting
+2025-11-24 21:21:00,347 - INFO - __main__ - MainWindow: initializing
+2025-11-24 21:21:00,347 - INFO - __main__ - Folder 'sessions' already exists at: C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions
+2025-11-24 21:21:00,347 - DEBUG - __main__ - MainWindow: window title set
+2025-11-24 21:21:00,349 - DEBUG - __main__ - MainWindow: screen detected, window resized to 960x510
+2025-11-24 21:21:00,349 - DEBUG - __main__ - MainWindow: QStackedWidget created
+2025-11-24 21:21:00,349 - INFO - __main__ - EntryPage: initializing
+2025-11-24 21:21:00,349 - DEBUG - __main__ - EntryPage: layout and widgets created
+2025-11-24 21:21:00,349 - INFO - __main__ - EntryPage: UI built
+2025-11-24 21:21:00,349 - DEBUG - __main__ - MainWindow: EntryPage created
+2025-11-24 21:21:00,349 - INFO - MainPage - MainPage: initializing UI
+2025-11-24 21:21:00,349 - DEBUG - MainPage - MainPage: window title set to 'Main Page'
+2025-11-24 21:21:00,349 - DEBUG - MainPage - MainPage: title label created
+2025-11-24 21:21:00,349 - DEBUG - MainPage - MainPage: continue button created and connected
+2025-11-24 21:21:00,349 - DEBUG - MainPage - MainPage: start button created and connected
+2025-11-24 21:21:00,349 - DEBUG - MainPage - MainPage: back button created and connected
+2025-11-24 21:21:00,349 - DEBUG - MainPage - MainPage: layout set
+2025-11-24 21:21:00,349 - INFO - MainPage - MainPage: UI initialization complete
+2025-11-24 21:21:00,349 - DEBUG - __main__ - MainWindow: MainPage created
+2025-11-24 21:21:00,349 - INFO - SessionPage - SessionPage: initializing UI
+2025-11-24 21:21:00,349 - DEBUG - SessionPage - SessionPage: window title set to 'Session Page'
+2025-11-24 21:21:00,349 - DEBUG - SessionPage - SessionPage: UI components added to layout
+2025-11-24 21:21:00,349 - INFO - SessionPage - SessionPage: UI initialization complete
+2025-11-24 21:21:00,349 - DEBUG - __main__ - MainWindow: SessionPage created
+2025-11-24 21:21:00,349 - DEBUG - CollectionPage - CollectionPage: Initialized with base folder C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions
+2025-11-24 21:21:00,349 - DEBUG - CollectionPage - CollectionPage: Window title set to 'Collection Page'
+2025-11-24 21:21:00,749 - DEBUG - CollectionPage - CollectionPage: UI components added to layout
+2025-11-24 21:21:00,755 - DEBUG - __main__ - MainWindow: CollectionPage created
+2025-11-24 21:21:01,118 - DEBUG - __main__ - MainWindow: pages added to stack
+2025-11-24 21:21:01,118 - DEBUG - __main__ - MainWindow: navigation signals connected
+2025-11-24 21:21:01,118 - DEBUG - __main__ - MainWindow: layout set
+2025-11-24 21:21:01,118 - INFO - __main__ - MainWindow: initialization complete
+2025-11-24 21:21:01,321 - INFO - __main__ - Main window shown
+2025-11-24 21:21:04,059 - INFO - __main__ - EntryPage: 'Enter Application' button clicked
+2025-11-24 21:21:04,059 - INFO - __main__ - Clicked to go to MainPage
+2025-11-24 21:21:05,345 - INFO - MainPage - MainPage: 'Continue Previous Session' button clicked
+2025-11-24 21:21:06,620 - INFO - MainPage - MainPage: User selected session 'hello' to continue
+2025-11-24 21:21:07,458 - INFO - MainPage - MainPage: Emitting go_to_session signal with session folder path: C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello
+2025-11-24 21:21:07,458 - INFO - __main__ - Clicked to go to SessionPage
+2025-11-24 21:21:07,458 - DEBUG - __main__ - MainWindow: Creating SessionSetting for session folder: C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello
+2025-11-24 21:21:07,460 - INFO - __main__ - SessionSetting created for session folder: C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello
+2025-11-24 21:21:07,460 - INFO - SessionPage - SessionPage: Loading session from folder: C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello
+2025-11-24 21:21:07,460 - INFO - FolderMangerClass - Folder 'C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello' files: ['settings.json']
+2025-11-24 21:21:07,461 - INFO - FolderMangerClass - Folder 'C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello' subfolders (first 3 items): {}
+2025-11-24 21:21:07,462 - DEBUG - MainPage - MainPage: go_to_session signal emitted
+2025-11-24 21:21:08,555 - INFO - SessionPage - SessionPage: Go to Collection Page button clicked
+2025-11-24 21:21:08,555 - INFO - __main__ - Clicked to go to CollectionPage
+2025-11-24 21:21:08,555 - INFO - CollectionPage - CollectionPage: Loaded session folder C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello
+2025-11-24 21:21:08,557 - INFO - SessionPage - SessionPage: Emitted signal to go to collection page
+2025-11-24 21:21:10,071 - INFO - CollectionPage - CollectionPage: Start EMG button clicked
+2025-11-24 21:21:10,088 - INFO - SerialClassFile - \u2705 Serial port COM9 opened at 500000.
+2025-11-24 21:21:10,089 - INFO - SerialClassFile - \u25b6\ufe0f Sent 'z' to microcontroller to start EMG streaming.
+2025-11-24 21:21:10,089 - DEBUG - SerialClassFile - SerialEMGClass: read loop started.
+2025-11-24 21:22:19,118 - INFO - __main__ - Application exiting with code 0
+2025-11-24 21:22:22,371 - INFO - __main__ - Application starting
+2025-11-24 21:22:22,391 - INFO - __main__ - MainWindow: initializing
+2025-11-24 21:22:22,392 - INFO - __main__ - Folder 'sessions' already exists at: C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions
+2025-11-24 21:22:22,392 - DEBUG - __main__ - MainWindow: window title set
+2025-11-24 21:22:22,392 - DEBUG - __main__ - MainWindow: screen detected, window resized to 960x510
+2025-11-24 21:22:22,392 - DEBUG - __main__ - MainWindow: QStackedWidget created
+2025-11-24 21:22:22,392 - INFO - __main__ - EntryPage: initializing
+2025-11-24 21:22:22,393 - DEBUG - __main__ - EntryPage: layout and widgets created
+2025-11-24 21:22:22,393 - INFO - __main__ - EntryPage: UI built
+2025-11-24 21:22:22,393 - DEBUG - __main__ - MainWindow: EntryPage created
+2025-11-24 21:22:22,393 - INFO - MainPage - MainPage: initializing UI
+2025-11-24 21:22:22,394 - DEBUG - MainPage - MainPage: window title set to 'Main Page'
+2025-11-24 21:22:22,394 - DEBUG - MainPage - MainPage: title label created
+2025-11-24 21:22:22,394 - DEBUG - MainPage - MainPage: continue button created and connected
+2025-11-24 21:22:22,394 - DEBUG - MainPage - MainPage: start button created and connected
+2025-11-24 21:22:22,394 - DEBUG - MainPage - MainPage: back button created and connected
+2025-11-24 21:22:22,394 - DEBUG - MainPage - MainPage: layout set
+2025-11-24 21:22:22,394 - INFO - MainPage - MainPage: UI initialization complete
+2025-11-24 21:22:22,394 - DEBUG - __main__ - MainWindow: MainPage created
+2025-11-24 21:22:22,394 - INFO - SessionPage - SessionPage: initializing UI
+2025-11-24 21:22:22,394 - DEBUG - SessionPage - SessionPage: window title set to 'Session Page'
+2025-11-24 21:22:22,395 - DEBUG - SessionPage - SessionPage: UI components added to layout
+2025-11-24 21:22:22,396 - INFO - SessionPage - SessionPage: UI initialization complete
+2025-11-24 21:22:22,396 - DEBUG - __main__ - MainWindow: SessionPage created
+2025-11-24 21:22:22,396 - DEBUG - CollectionPage - CollectionPage: Initialized with base folder C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions
+2025-11-24 21:22:22,396 - DEBUG - CollectionPage - CollectionPage: Window title set to 'Collection Page'
+2025-11-24 21:22:22,773 - DEBUG - CollectionPage - CollectionPage: UI components added to layout
+2025-11-24 21:22:22,773 - DEBUG - __main__ - MainWindow: CollectionPage created
+2025-11-24 21:22:23,065 - DEBUG - __main__ - MainWindow: pages added to stack
+2025-11-24 21:22:23,065 - DEBUG - __main__ - MainWindow: navigation signals connected
+2025-11-24 21:22:23,065 - DEBUG - __main__ - MainWindow: layout set
+2025-11-24 21:22:23,065 - INFO - __main__ - MainWindow: initialization complete
+2025-11-24 21:22:23,267 - INFO - __main__ - Main window shown
+2025-11-24 21:22:25,989 - INFO - __main__ - EntryPage: 'Enter Application' button clicked
+2025-11-24 21:22:25,989 - INFO - __main__ - Clicked to go to MainPage
+2025-11-24 21:22:26,739 - INFO - MainPage - MainPage: 'Continue Previous Session' button clicked
+2025-11-24 21:22:27,901 - INFO - MainPage - MainPage: User selected session 'hello' to continue
+2025-11-24 21:22:28,627 - INFO - MainPage - MainPage: Emitting go_to_session signal with session folder path: C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello
+2025-11-24 21:22:28,627 - INFO - __main__ - Clicked to go to SessionPage
+2025-11-24 21:22:28,627 - DEBUG - __main__ - MainWindow: Creating SessionSetting for session folder: C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello
+2025-11-24 21:22:28,628 - INFO - __main__ - SessionSetting created for session folder: C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello
+2025-11-24 21:22:28,629 - INFO - SessionPage - SessionPage: Loading session from folder: C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello
+2025-11-24 21:22:28,629 - INFO - FolderMangerClass - Folder 'C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello' files: ['settings.json']
+2025-11-24 21:22:28,629 - INFO - FolderMangerClass - Folder 'C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello' subfolders (first 3 items): {}
+2025-11-24 21:22:28,631 - DEBUG - MainPage - MainPage: go_to_session signal emitted
+2025-11-24 21:22:29,980 - INFO - SessionPage - SessionPage: Go to Collection Page button clicked
+2025-11-24 21:22:29,980 - INFO - __main__ - Clicked to go to CollectionPage
+2025-11-24 21:22:29,980 - INFO - CollectionPage - CollectionPage: Loaded session folder C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application3\sessions\hello
+2025-11-24 21:22:29,982 - INFO - SessionPage - SessionPage: Emitted signal to go to collection page
+2025-11-24 21:22:31,675 - INFO - CollectionPage - CollectionPage: Start EMG button clicked
+2025-11-24 21:22:31,692 - INFO - SerialClassFile - \u2705 Serial port COM9 opened at 500000.
+2025-11-24 21:22:31,692 - INFO - SerialClassFile - \u25b6\ufe0f Sent 'z' to microcontroller to start EMG streaming.
+2025-11-24 21:22:31,693 - DEBUG - SerialClassFile - SerialEMGClass: read loop started.
+2025-11-24 21:24:38,725 - INFO - __main__ - Application exiting with code 0

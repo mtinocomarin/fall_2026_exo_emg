@@ -17,85 +17,172 @@ from PyQt5.QtWidgets import QInputDialog
 
 # ----------------------------- EMG LOADING ----------------------------------
 
+def _unwrap_monotonic_ns(raw_ns):
+    """Unwrap signed 32-bit wraps into a monotonic int64 timeline."""
+    if not raw_ns:
+        return np.array([], dtype=np.int64)
+
+    wrap_mod = 2 ** 32
+    offset = 0
+    prev = int(raw_ns[0])
+    out = [prev]
+
+    for t in raw_ns[1:]:
+        t = int(t)
+        if t < prev:
+            offset += wrap_mod
+        out.append(t + offset)
+        prev = t
+
+    return np.asarray(out, dtype=np.int64)
+
+
+def _guess_button_path(emg_path):
+    base = os.path.basename(emg_path)
+    stem, _ = os.path.splitext(base)
+    if not stem.startswith("trial_"):
+        return None
+    try:
+        trial_num = int(stem.replace("trial_", ""))
+    except ValueError:
+        return None
+    return os.path.join(os.path.dirname(emg_path), f"button_{trial_num}.txt")
+
+
+def _load_button_sidecar(button_path, emg_t_ns):
+    """Load button values from button_X.txt and align to EMG rows."""
+    out = np.zeros(len(emg_t_ns), dtype=np.int8)
+    if not button_path or not os.path.exists(button_path):
+        return out
+
+    rows = []
+    with open(button_path, "r") as f:
+        _ = f.readline()  # optional header
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            parts = [p.strip() for p in line.split(",")]
+            if len(parts) < 2:
+                continue
+            try:
+                t_ns = int(parts[0])
+                b = 1 if int(parts[1]) == 1 else 0
+            except ValueError:
+                continue
+            rows.append((t_ns, b))
+
+    if not rows:
+        return out
+
+    if len(rows) == len(emg_t_ns):
+        return np.asarray([b for _, b in rows], dtype=np.int8)
+
+    bmap = {t_ns: b for t_ns, b in rows}
+    for i, t_ns in enumerate(emg_t_ns):
+        out[i] = bmap.get(int(t_ns), 0)
+    return out
+
+
 def load_emg_file(emg_path):
     """
-    Load EMG text file.
+    Load EMG file in old or new format.
 
-    Supports two line formats (after header):
-    1) time-only:
-         16:04:11.572   1.29 1.32 1.31
-    2) date + time:
-         2025-07-30 16:04:11.572   1.29 1.32 1.31
+    Old formats:
+    - HH:MM:SS.mmm  ch1 ch2 ch3
+    - YYYY-MM-DD HH:MM:SS.mmm  ch1 ch2 ch3
+
+    New formats:
+    - t_ns,ch1_V,ch2_V,ch3_V
+    - t_ns,ch1_V,ch2_V,ch3_V,button
 
     Returns:
-        times_sec: 1D numpy array of time (seconds) relative to first sample
-        emg:       2D numpy array of shape (N, 3)
+        times_sec: relative time (N,)
+        emg:       channels (N,3)
+        button:    button state (N,), 0/1
     """
-    timestamps = []
+    timestamps_dt = []
+    timestamps_ns = []
     ch1 = []
     ch2 = []
     ch3 = []
+    button_inline = []
+    saw_new = False
 
     with open(emg_path, "r") as f:
-        header = f.readline()  # skip the header
+        _ = f.readline()  # header
 
         for line in f:
             line = line.strip()
             if not line:
                 continue
 
+            if "," in line:
+                parts = [p.strip() for p in line.split(",")]
+                if len(parts) >= 4:
+                    try:
+                        t_ns = int(parts[0])
+                        v1 = float(parts[1])
+                        v2 = float(parts[2])
+                        v3 = float(parts[3])
+                    except ValueError:
+                        pass
+                    else:
+                        b = 0
+                        if len(parts) >= 5:
+                            try:
+                                b = 1 if int(parts[4]) == 1 else 0
+                            except ValueError:
+                                b = 0
+                        timestamps_ns.append(t_ns)
+                        ch1.append(v1)
+                        ch2.append(v2)
+                        ch3.append(v3)
+                        button_inline.append(b)
+                        saw_new = True
+                        continue
+
             parts = line.split()
             if len(parts) < 4:
                 continue
 
-            # ------------------------------------------------------------
-            # CASE 1: TIME-ONLY FORMAT
-            # e.g. "16:04:11.572   1.2  1.3  1.1"
-            # ------------------------------------------------------------
             if ":" in parts[0] and "-" not in parts[0]:
-                # first token is the time string
                 ts_str = parts[0]
                 v1_str, v2_str, v3_str = parts[1:4]
-
                 t = datetime.strptime(ts_str, "%H:%M:%S.%f")
-
             else:
-                # ------------------------------------------------------------
-                # CASE 2: DATE + TIME FORMAT
-                # e.g. "2025-07-30 16:04:11.572   1.2  1.3  1.1"
-                # ------------------------------------------------------------
                 if len(parts) < 5:
-                    continue  # not enough columns
-
-                date_str = parts[0]
-                time_str = parts[1]
+                    continue
+                dt_str = f"{parts[0]} {parts[1]}"
                 v1_str, v2_str, v3_str = parts[2:5]
-
-                dt_str = f"{date_str} {time_str}"
-
-                # Try with milliseconds, then without
                 try:
                     t = datetime.strptime(dt_str, "%Y-%m-%d %H:%M:%S.%f")
                 except ValueError:
                     t = datetime.strptime(dt_str, "%Y-%m-%d %H:%M:%S")
 
-            # store data
-            timestamps.append(t)
+            timestamps_dt.append(t)
             ch1.append(float(v1_str))
             ch2.append(float(v2_str))
             ch3.append(float(v3_str))
+            button_inline.append(0)
 
-    if not timestamps:
+    if not ch1:
         raise ValueError(f"No data found in {emg_path}")
 
-    # ---- convert timestamps to relative seconds ----
-    t0 = timestamps[0]
-    times_sec = np.array([(t - t0).total_seconds() for t in timestamps], dtype=float)
+    if saw_new and len(timestamps_ns) == len(ch1):
+        t_ns_unwrapped = _unwrap_monotonic_ns(timestamps_ns)
+        times_sec = (t_ns_unwrapped - t_ns_unwrapped[0]).astype(np.float64) / 1e9
+        if any(button_inline):
+            button = np.asarray(button_inline, dtype=np.int8)
+        else:
+            button = _load_button_sidecar(_guess_button_path(emg_path), timestamps_ns)
+    else:
+        t0 = timestamps_dt[0]
+        times_sec = np.array([(t - t0).total_seconds() for t in timestamps_dt], dtype=float)
+        button = np.asarray(button_inline, dtype=np.int8)
 
-    # ---- build EMG array ----
     emg = np.column_stack([ch1, ch2, ch3]).astype(float)
-
-    return times_sec, emg
+    return times_sec, emg, button
 
 
 # ----------------------------- HELPER ---------------------------------------
@@ -113,12 +200,13 @@ def format_time_from_seconds(s):
 # ----------------------------- VIEWER CLASS ---------------------------------
 
 class EMGVideoViewer(QWidget):
-    def __init__(self, video_path, emg_times, emg_data, emg_path, parent=None):
+    def __init__(self, video_path, emg_times, emg_data, button_data, emg_path, parent=None):
         super().__init__(parent)
 
         self.video_path = video_path
         self.emg_times = emg_times       # 1D array
         self.emg_data = emg_data         # shape (N, 3)
+        self.button_data = button_data   # shape (N,), 0/1
         self.emg_path = emg_path         # full path to original EMG file
         self.folder = os.path.dirname(self.emg_path)   # <--- ADD THIS
 
@@ -137,6 +225,7 @@ class EMGVideoViewer(QWidget):
         # For clipping window
         self.clip_samples = None
         self.region = None
+        self.button_regions = []
         if len(self.emg_times) > 1:
             self.dt_mean = float(np.mean(np.diff(self.emg_times)))
         else:
@@ -164,6 +253,7 @@ class EMGVideoViewer(QWidget):
 
         # Match video & EMG durations roughly
         self.plot_widget.setXRange(0, self.emg_times[-1], padding=0)
+        self._build_button_regions()
 
         # ---- Clip controls (samples window) ----
         clip_layout = QHBoxLayout()
@@ -203,6 +293,51 @@ class EMGVideoViewer(QWidget):
         self.timer.start(self.interval_ms)
 
     # --------------- Clip window logic -----------------
+    def _clear_button_regions(self):
+        for reg in self.button_regions:
+            try:
+                self.plot_widget.removeItem(reg)
+            except Exception:
+                pass
+        self.button_regions = []
+
+    def _build_button_regions(self):
+        self._clear_button_regions()
+        if len(self.emg_times) == 0 or len(self.button_data) == 0:
+            return
+
+        n = min(len(self.emg_times), len(self.button_data))
+        times = self.emg_times[:n]
+        button = np.asarray(self.button_data[:n], dtype=np.int8)
+
+        min_width = self.dt_mean if self.dt_mean > 0 else 0.01
+        i = 0
+        while i < n:
+            if button[i] != 1:
+                i += 1
+                continue
+
+            start_i = i
+            while i + 1 < n and button[i + 1] == 1:
+                i += 1
+            end_i = i
+
+            t0 = float(times[start_i])
+            t1 = float(times[end_i]) + min_width
+            if t1 <= t0:
+                t1 = t0 + min_width
+
+            reg = pg.LinearRegionItem(
+                values=(t0, t1),
+                movable=False,
+                brush=(255, 0, 0, 35),
+                pen=(255, 0, 0, 110),
+            )
+            reg.setZValue(-20)
+            self.plot_widget.addItem(reg)
+            self.button_regions.append(reg)
+            i += 1
+
     def load_other_trial(self):
         """Reload viewer with another trial in the same folder, reusing this window."""
         # Pause playback while switching
@@ -264,11 +399,12 @@ class EMGVideoViewer(QWidget):
         print("  Video:", new_video_path)
 
         # ---------- Load new EMG ----------
-        new_times, new_data = load_emg_file(new_emg_path)
+        new_times, new_data, new_button = load_emg_file(new_emg_path)
 
         # Update EMG state
         self.emg_times = new_times
         self.emg_data = new_data
+        self.button_data = new_button
         self.emg_path = new_emg_path
         self.folder = os.path.dirname(self.emg_path)
 
@@ -281,6 +417,7 @@ class EMGVideoViewer(QWidget):
         self.curve_ch1.clear()
         self.curve_ch2.clear()
         self.curve_ch3.clear()
+        self._clear_button_regions()
 
         if self.region is not None:
             self.plot_widget.removeItem(self.region)
@@ -288,6 +425,7 @@ class EMGVideoViewer(QWidget):
 
         # Update x-axis for new EMG duration
         self.plot_widget.setXRange(0, self.emg_times[-1], padding=0)
+        self._build_button_regions()
 
         # ---------- Reset VIDEO ----------
         if self.cap is not None:
@@ -345,7 +483,8 @@ class EMGVideoViewer(QWidget):
         if self.region is None:
             self.region = pg.LinearRegionItem(values=(t_start, t_end),
                                               movable=True,
-                                              brush=(50, 50, 200, 50))
+                                              brush=(255, 220, 0, 55),
+                                              pen=(255, 200, 0, 170))
             self.region.setZValue(-10)  # behind curves
             # keep region inside full EMG range
             self.region.setBounds([float(self.emg_times[0]),
@@ -391,6 +530,7 @@ class EMGVideoViewer(QWidget):
 
         times_clip = self.emg_times[idx].copy()
         emg_clip = self.emg_data[idx, :].copy()
+        button_clip = self.button_data[idx].astype(int).copy()
 
         # Real start and end in original time axis (for video)
         t_clip_start = float(times_clip[0])
@@ -423,10 +563,10 @@ class EMGVideoViewer(QWidget):
 
         # ---------- Save EMG TXT ----------
         with open(emg_out_path, "w") as f:
-            f.write("timestamp\tch1\tch2\tch3\n")
-            for t_sec, (c1, c2, c3) in zip(times_clip, emg_clip):
+            f.write("timestamp\tch1\tch2\tch3\tbutton\n")
+            for t_sec, (c1, c2, c3), b in zip(times_clip, emg_clip, button_clip):
                 ts_formatted = format_time_from_seconds(t_sec)
-                f.write(f"{ts_formatted}\t{c1:.6f}\t{c2:.6f}\t{c3:.6f}\n")
+                f.write(f"{ts_formatted}\t{c1:.6f}\t{c2:.6f}\t{c3:.6f}\t{int(b)}\n")
 
         print(f"Saved EMG clip with {len(times_clip)} samples to: {emg_out_path}")
 
@@ -531,6 +671,7 @@ class EMGVideoViewer(QWidget):
             self.curve_ch3.setData(t, y3)
 
 
+
 # ----------------------------- MAIN SCRIPT ----------------------------------
 
 def main():
@@ -587,11 +728,11 @@ def main():
     print(f"Using VIDEO file: {video_path}")
 
     # Load EMG data
-    emg_times, emg_data = load_emg_file(emg_path)
+    emg_times, emg_data, button_data = load_emg_file(emg_path)
 
     # Run Qt app
     app = QApplication(sys.argv)
-    viewer = EMGVideoViewer(video_path, emg_times, emg_data, emg_path)
+    viewer = EMGVideoViewer(video_path, emg_times, emg_data, button_data, emg_path)
     viewer.setWindowTitle(f"Trial {n} - EMG + Video")
     viewer.resize(900, 750)
     viewer.show()

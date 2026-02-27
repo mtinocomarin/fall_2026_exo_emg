@@ -17,84 +17,109 @@ from PyQt5.QtWidgets import QInputDialog
 
 # ----------------------------- EMG LOADING ----------------------------------
 
+def _unwrap_monotonic_ns(raw_ns):
+    """Unwrap signed 32-bit wraps into a monotonic int64 timeline."""
+    if not raw_ns:
+        return np.array([], dtype=np.int64)
+
+    wrap_mod = 2 ** 32
+    offset = 0
+    prev = int(raw_ns[0])
+    out = [prev]
+
+    for t in raw_ns[1:]:
+        t = int(t)
+        if t < prev:
+            offset += wrap_mod
+        out.append(t + offset)
+        prev = t
+
+    return np.asarray(out, dtype=np.int64)
+
+
 def load_emg_file(emg_path):
     """
-    Load EMG text file.
+    Load EMG file in old or new format.
 
-    Supports two line formats (after header):
-    1) time-only:
-         16:04:11.572   1.29 1.32 1.31
-    2) date + time:
-         2025-07-30 16:04:11.572   1.29 1.32 1.31
+    Old formats:
+    - HH:MM:SS.mmm  ch1 ch2 ch3
+    - YYYY-MM-DD HH:MM:SS.mmm  ch1 ch2 ch3
+
+    New formats:
+    - t_ns,ch1_V,ch2_V,ch3_V
+    - t_ns,ch1_V,ch2_V,ch3_V,button
 
     Returns:
-        times_sec: 1D numpy array of time (seconds) relative to first sample
+        times_sec: 1D numpy array of time (seconds), relative to first sample
         emg:       2D numpy array of shape (N, 3)
     """
-    timestamps = []
+    timestamps_dt = []
+    timestamps_ns = []
     ch1 = []
     ch2 = []
     ch3 = []
+    saw_new = False
 
     with open(emg_path, "r") as f:
-        header = f.readline()  # skip the header
+        _ = f.readline()  # header
 
         for line in f:
             line = line.strip()
             if not line:
                 continue
 
+            if "," in line:
+                parts = [p.strip() for p in line.split(",")]
+                if len(parts) >= 4:
+                    try:
+                        t_ns = int(parts[0])
+                        v1 = float(parts[1])
+                        v2 = float(parts[2])
+                        v3 = float(parts[3])
+                    except ValueError:
+                        pass
+                    else:
+                        timestamps_ns.append(t_ns)
+                        ch1.append(v1)
+                        ch2.append(v2)
+                        ch3.append(v3)
+                        saw_new = True
+                        continue
+
             parts = line.split()
             if len(parts) < 4:
                 continue
 
-            # ------------------------------------------------------------
-            # CASE 1: TIME-ONLY FORMAT
-            # e.g. "16:04:11.572   1.2  1.3  1.1"
-            # ------------------------------------------------------------
             if ":" in parts[0] and "-" not in parts[0]:
-                # first token is the time string
                 ts_str = parts[0]
                 v1_str, v2_str, v3_str = parts[1:4]
-
                 t = datetime.strptime(ts_str, "%H:%M:%S.%f")
-
             else:
-                # ------------------------------------------------------------
-                # CASE 2: DATE + TIME FORMAT
-                # e.g. "2025-07-30 16:04:11.572   1.2  1.3  1.1"
-                # ------------------------------------------------------------
                 if len(parts) < 5:
-                    continue  # not enough columns
-
-                date_str = parts[0]
-                time_str = parts[1]
+                    continue
+                dt_str = f"{parts[0]} {parts[1]}"
                 v1_str, v2_str, v3_str = parts[2:5]
-
-                dt_str = f"{date_str} {time_str}"
-
-                # Try with milliseconds, then without
                 try:
                     t = datetime.strptime(dt_str, "%Y-%m-%d %H:%M:%S.%f")
                 except ValueError:
                     t = datetime.strptime(dt_str, "%Y-%m-%d %H:%M:%S")
 
-            # store data
-            timestamps.append(t)
+            timestamps_dt.append(t)
             ch1.append(float(v1_str))
             ch2.append(float(v2_str))
             ch3.append(float(v3_str))
 
-    if not timestamps:
+    if not ch1:
         raise ValueError(f"No data found in {emg_path}")
 
-    # ---- convert timestamps to relative seconds ----
-    t0 = timestamps[0]
-    times_sec = np.array([(t - t0).total_seconds() for t in timestamps], dtype=float)
+    if saw_new and len(timestamps_ns) == len(ch1):
+        t_ns_unwrapped = _unwrap_monotonic_ns(timestamps_ns)
+        times_sec = (t_ns_unwrapped - t_ns_unwrapped[0]).astype(np.float64) / 1e9
+    else:
+        t0 = timestamps_dt[0]
+        times_sec = np.array([(t - t0).total_seconds() for t in timestamps_dt], dtype=float)
 
-    # ---- build EMG array ----
     emg = np.column_stack([ch1, ch2, ch3]).astype(float)
-
     return times_sec, emg
 
 

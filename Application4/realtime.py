@@ -5,10 +5,13 @@ from pathlib import Path
 import threading
 import queue
 import os
+from collections import deque
+import time
 
 import serial
 import cv2
 from PyQt5 import QtWidgets, QtCore, QtGui
+import pyqtgraph as pg
 
 
 # =========================
@@ -141,14 +144,14 @@ class SerialEMGHandler:
 
     That is:
 
-        ch1_raw, ch2_raw, ch3_raw, pred_char, window
+        ch1_raw, ch2_raw, ch3_raw, pred_char, button
 
     Example:
 
-        "2212,1138,2415,2,53"
+        "2212,1138,2415,2,1"
     """
 
-    def __init__(self, port='COM10', baudrate=500000):
+    def __init__(self, port='COM9', baudrate=500000):
         self.port = port
         self.baudrate = baudrate
         self.ser = None
@@ -156,12 +159,18 @@ class SerialEMGHandler:
         self.running = False
 
         # Callbacks:
+        #   sample_callback(timestamp_str, ch1_v, ch2_v, ch3_v, pred_class_or_char, button)
+        # Backward compatibility:
         #   emg_callback(timestamp_str, ch1_v, ch2_v, ch3_v)
-        #   pred_callback(timestamp_str, pred_class_or_char, window)
+        #   pred_callback(timestamp_str, pred_class_or_char, button)
+        self.sample_callback = None
         self.emg_callback = None
         self.pred_callback = None
 
     # ---------- Public API ----------
+
+    def set_sample_callback(self, func):
+        self.sample_callback = func
 
     def set_emg_callback(self, func):
         self.emg_callback = func
@@ -248,7 +257,7 @@ class SerialEMGHandler:
                 logging.debug(f"RAW LINE: {repr(line)}")
                 now_str = datetime.now().strftime('%H:%M:%S.%f')[:-3]
 
-                # Expect exactly: v1,v2,v3,pred_char,window  → 4 commas
+                # Expect exactly: v1,v2,v3,pred_char,button  -> 4 commas
                 if line.count(',') != 4:
                     logging.debug(f"[IGNORED] Not 5 fields: {repr(line)}")
                     continue
@@ -258,7 +267,7 @@ class SerialEMGHandler:
                     if len(parts) != 5:
                         raise ValueError(f"expected 5 fields, got {len(parts)}")
 
-                    a, b, c, pred_token, win_token = parts
+                    a, b, c, pred_token, button_token = parts
 
                     # ---------- Parse and validate ADC fields ----------
                     vals = []
@@ -300,11 +309,11 @@ class SerialEMGHandler:
                             f"⚠️ pred_token has extra chars: {pred_token!r}, using {pred_char!r}"
                         )
 
-                    # ---------- Parse window number ----------
-                    if not win_token.isdigit():
-                        raise ValueError(f"window token is not digits: {win_token!r}")
+                    # ---------- Parse button state ----------
+                    if not button_token.isdigit():
+                        raise ValueError(f"button token is not digits: {button_token!r}")
 
-                    win_num = int(win_token)
+                    button_state = int(button_token)
 
                     # ---------- Convert to voltages ----------
                     ch1_v = (ch1_raw / ADC_RES) * VREF - MIDPOINT
@@ -325,18 +334,28 @@ class SerialEMGHandler:
                             f"{ch1_v:.6f}, {ch2_v:.6f}, {ch3_v:.6f}"
                         )
 
+                    # If class is digit, keep it as int for easier downstream handling.
+                    if isinstance(pred_char, str) and pred_char.isdigit():
+                        pred_val = int(pred_char)
+                    else:
+                        pred_val = pred_char
+
                     # ---------- Everything is clean: fire callbacks ----------
-                    if self.emg_callback:
-                        self.emg_callback(now_str, ch1_v, ch2_v, ch3_v)
-
-                    if self.pred_callback:
-                        # If you want int class instead of char when digit:
-                        if isinstance(pred_char, str) and pred_char.isdigit():
-                            pred_val = int(pred_char)
-                        else:
-                            pred_val = pred_char
-
-                        self.pred_callback(now_str, pred_val, win_num)
+                    if self.sample_callback:
+                        self.sample_callback(
+                            now_str,
+                            ch1_v,
+                            ch2_v,
+                            ch3_v,
+                            pred_val,
+                            button_state,
+                        )
+                    else:
+                        # Fallback to older split callbacks.
+                        if self.emg_callback:
+                            self.emg_callback(now_str, ch1_v, ch2_v, ch3_v)
+                        if self.pred_callback:
+                            self.pred_callback(now_str, pred_val, button_state)
 
                 except Exception as e:
                     # Anything weird (merged lines, garbage, spike) is skipped
@@ -351,8 +370,14 @@ class SerialEMGHandler:
 # RealTimeTestApp (EMG + camera + video)
 # =========================
 class RealTimeTestApp(QtWidgets.QWidget):
+    PLOT_DOWNSAMPLE = 30
+    PLOT_MAX_POINTS = 180
+    PLOT_UPDATE_MS = 250
+    EMG_LABEL_STRIDE = 10
+
     # Signals to safely update GUI from callbacks (background thread)
     emg_sig = QtCore.pyqtSignal(float, float, float)
+    plot_sig = QtCore.pyqtSignal(float, float, float)
     pred_sig = QtCore.pyqtSignal(object, int)
 
     def __init__(self, port='COM10', baudrate=500000, parent=None):
@@ -362,8 +387,7 @@ class RealTimeTestApp(QtWidgets.QWidget):
 
         # Serial
         self.serial = SerialEMGHandler(port=port, baudrate=baudrate)
-        self.serial.set_emg_callback(self.on_emg_sample)
-        self.serial.set_pred_callback(self.on_prediction)
+        self.serial.set_sample_callback(self.on_sample)
 
         # Camera
         self.camera = CameraCapture(cam_index=0, width=640, height=360, fps=30)
@@ -381,6 +405,18 @@ class RealTimeTestApp(QtWidgets.QWidget):
         self.current_set_dir: Path | None = None
         self.emg_file = None
         self.pred_file = None
+        self.button_file = None
+        self.t0_ns = None
+        self.sample_counter = 0
+        self.last_pred_ui = None
+        self.last_button_ui = None
+
+        # Plot buffers (kept intentionally small for low-resolution plotting)
+        self.plot_x = deque(maxlen=self.PLOT_MAX_POINTS)
+        self.plot_ch1 = deque(maxlen=self.PLOT_MAX_POINTS)
+        self.plot_ch2 = deque(maxlen=self.PLOT_MAX_POINTS)
+        self.plot_ch3 = deque(maxlen=self.PLOT_MAX_POINTS)
+        self.plot_point_idx = 0
 
         # ---------- NEW SAVING STRUCTURE ----------
         # Root folder
@@ -404,11 +440,28 @@ class RealTimeTestApp(QtWidgets.QWidget):
         self.start_btn = QtWidgets.QPushButton("Start (mode 'c')")
         self.stop_btn = QtWidgets.QPushButton("Stop (send 'v')")
         self.pred_label = QtWidgets.QLabel("Last prediction: -")
-        self.win_label = QtWidgets.QLabel("Last window: -")
+        self.button_label = QtWidgets.QLabel("Last button: -")
         self.emg_label = QtWidgets.QLabel("Last EMG: -")
+        self.plot_title = QtWidgets.QLabel("EMG Plot (Very Low Resolution)")
         self.video_label = QtWidgets.QLabel("Camera starting...")
         self.video_label.setFixedSize(640, 360)
         self.video_label.setStyleSheet("background-color: black; color: white;")
+
+        # Low-cost EMG plot (downsampled + timer-driven redraw)
+        pg.setConfigOptions(antialias=False)
+        self.emg_plot = pg.PlotWidget()
+        self.emg_plot.setFixedHeight(170)
+        self.emg_plot.setBackground((20, 20, 20))
+        self.emg_plot.showGrid(x=True, y=True, alpha=0.2)
+        self.emg_plot.setLabel("left", "V")
+        self.emg_plot.setLabel("bottom", "Low-res index")
+        self.emg_plot.setYRange(0.0, 3.0, padding=0)
+        self.emg_plot.getPlotItem().setDownsampling(auto=False, ds=1, mode='peak')
+        self.emg_plot.getPlotItem().setClipToView(True)
+
+        self.plot_curve1 = self.emg_plot.plot([], [], pen=pg.mkPen((0, 255, 255), width=1))
+        self.plot_curve2 = self.emg_plot.plot([], [], pen=pg.mkPen((255, 165, 0), width=1))
+        self.plot_curve3 = self.emg_plot.plot([], [], pen=pg.mkPen((0, 255, 0), width=1))
 
         # Layout
         btn_layout = QtWidgets.QHBoxLayout()
@@ -417,12 +470,14 @@ class RealTimeTestApp(QtWidgets.QWidget):
 
         label_layout = QtWidgets.QVBoxLayout()
         label_layout.addWidget(self.pred_label)
-        label_layout.addWidget(self.win_label)
+        label_layout.addWidget(self.button_label)
         label_layout.addWidget(self.emg_label)
+        label_layout.addWidget(self.plot_title)
 
         main_layout = QtWidgets.QVBoxLayout()
         main_layout.addLayout(btn_layout)
         main_layout.addLayout(label_layout)
+        main_layout.addWidget(self.emg_plot)
         main_layout.addWidget(self.video_label)
         self.setLayout(main_layout)
 
@@ -431,7 +486,12 @@ class RealTimeTestApp(QtWidgets.QWidget):
         self.stop_btn.clicked.connect(self.handle_stop)
 
         self.emg_sig.connect(self.update_emg_label)
+        self.plot_sig.connect(self.on_plot_sample)
         self.pred_sig.connect(self.update_pred_labels)
+
+        self.plot_timer = QtCore.QTimer(self)
+        self.plot_timer.timeout.connect(self.refresh_plot)
+        self.plot_timer.start(self.PLOT_UPDATE_MS)
 
     # ---------- Start / Stop ----------
 
@@ -451,15 +511,30 @@ class RealTimeTestApp(QtWidgets.QWidget):
 
         # Prediction file in predictions subfolder: trial_1.txt, trial_2.txt, ...
         pred_path = self.predictions_dir / f"trial_{trial_idx}.txt"
+        # Button file in session folder: button_1.txt, button_2.txt, ...
+        button_path = self.current_set_dir / f"button_{trial_idx}.txt"
 
-        # Open EMG / prediction files
+        # Open EMG / prediction / button files
         self.emg_file = open(emg_path, "w", buffering=1)
         self.pred_file = open(pred_path, "w", buffering=1)
+        self.button_file = open(button_path, "w", buffering=1)
+
+        # Same style as Application5: button file uses t_ns from trial start.
+        self.t0_ns = time.perf_counter_ns()
 
         self.emg_file.write("timestamp\tch1\tch2\tch3\n")
-        self.pred_file.write("timestamp\tclass\twindow\n")
+        self.pred_file.write("timestamp\tclass\tbutton\n")
+        self.button_file.write("t_ns,button\n")
 
         self.collecting = True
+        self.sample_counter = 0
+        self.last_pred_ui = None
+        self.last_button_ui = None
+        self.plot_point_idx = 0
+        self.plot_x.clear()
+        self.plot_ch1.clear()
+        self.plot_ch2.clear()
+        self.plot_ch3.clear()
 
         # Start serial stream
         self.serial.start_stream(mode_char=b'c')
@@ -472,7 +547,7 @@ class RealTimeTestApp(QtWidgets.QWidget):
             )
 
         self.pred_label.setText("Last prediction: -")
-        self.win_label.setText("Last window: -")
+        self.button_label.setText("Last button: -")
         self.emg_label.setText("Last EMG: -")
 
         logging.info(f"✅ Started new trial {trial_idx} in {self.current_set_dir}")
@@ -484,16 +559,20 @@ class RealTimeTestApp(QtWidgets.QWidget):
         # Stop serial stream
         self.serial.stop_stream(stop_char=b'v')
 
-        # Close EMG / prediction files
+        # Close EMG / prediction / button files
         if self.emg_file:
             self.emg_file.close()
             self.emg_file = None
         if self.pred_file:
             self.pred_file.close()
             self.pred_file = None
+        if self.button_file:
+            self.button_file.close()
+            self.button_file = None
 
+        self.t0_ns = None
         self.collecting = False
-        logging.info("🛑 Stopped EMG/prediction recording.")
+        logging.info("🛑 Stopped EMG/prediction/button recording.")
 
         # Stop video recording only (keep camera running)
         if self.camera.recording:
@@ -513,30 +592,49 @@ class RealTimeTestApp(QtWidgets.QWidget):
 
     # ---------- Callbacks from SerialEMGHandler (background thread) ----------
 
-    def on_emg_sample(self, timestamp_str, ch1, ch2, ch3):
-        if not self.collecting or self.emg_file is None:
+    def on_sample(self, timestamp_str, ch1, ch2, ch3, pred_class, button_state):
+        """
+        Single per-sample callback from serial parser.
+        One line in all files shares exactly the same timestamp.
+        """
+        if not self.collecting:
             return
 
-        # write to file (background thread is okay for IO)
-        line = f"{timestamp_str}\t{ch1:.6f}\t{ch2:.6f}\t{ch3:.6f}\n"
-        try:
-            self.emg_file.write(line)
-        except Exception as e:
-            logging.warning(f"⚠️ Failed to write EMG line: {e}")
-
-        # emit to GUI thread
-        self.emg_sig.emit(ch1, ch2, ch3)
-
-    def on_prediction(self, timestamp_str, pred_class, window):
-        if self.collecting and self.pred_file is not None:
-            line = f"{timestamp_str}\t{pred_class}\t{window}\n"
+        if self.emg_file is not None:
             try:
-                self.pred_file.write(line)
+                self.emg_file.write(f"{timestamp_str}\t{ch1:.6f}\t{ch2:.6f}\t{ch3:.6f}\n")
+            except Exception as e:
+                logging.warning(f"⚠️ Failed to write EMG line: {e}")
+
+        if self.pred_file is not None:
+            try:
+                self.pred_file.write(f"{timestamp_str}\t{pred_class}\t{button_state}\n")
             except Exception as e:
                 logging.warning(f"⚠️ Failed to write prediction line: {e}")
 
-        # emit to GUI thread
-        self.pred_sig.emit(pred_class, window)
+        if self.button_file is not None:
+            try:
+                if self.t0_ns is not None:
+                    t_ns = time.perf_counter_ns() - self.t0_ns
+                else:
+                    t_ns = time.perf_counter_ns()
+                self.button_file.write(f"{t_ns},{button_state}\n")
+            except Exception as e:
+                logging.warning(f"⚠️ Failed to write button line: {e}")
+
+        # Throttle GUI updates so serial + camera paths stay fast.
+        self.sample_counter += 1
+
+        if self.sample_counter == 1 or (self.sample_counter % self.EMG_LABEL_STRIDE == 0):
+            self.emg_sig.emit(ch1, ch2, ch3)
+
+        if self.sample_counter == 1 or (self.sample_counter % self.PLOT_DOWNSAMPLE == 0):
+            self.plot_sig.emit(ch1, ch2, ch3)
+
+        if pred_class != self.last_pred_ui or button_state != self.last_button_ui:
+            self.last_pred_ui = pred_class
+            self.last_button_ui = button_state
+            self.pred_sig.emit(pred_class, button_state)
 
     # ---------- Slots (GUI thread) ----------
 
@@ -545,9 +643,26 @@ class RealTimeTestApp(QtWidgets.QWidget):
         self.emg_label.setText(f"Last EMG: {ch1:.3f}, {ch2:.3f}, {ch3:.3f}")
 
     @QtCore.pyqtSlot(object, int)
-    def update_pred_labels(self, pred_class, window):
+    def update_pred_labels(self, pred_class, button_state):
         self.pred_label.setText(f"Last prediction: {pred_class}")
-        self.win_label.setText(f"Last window: {window}")
+        self.button_label.setText(f"Last button: {button_state}")
+
+    @QtCore.pyqtSlot(float, float, float)
+    def on_plot_sample(self, ch1, ch2, ch3):
+        self.plot_x.append(self.plot_point_idx)
+        self.plot_ch1.append(ch1)
+        self.plot_ch2.append(ch2)
+        self.plot_ch3.append(ch3)
+        self.plot_point_idx += 1
+
+    def refresh_plot(self):
+        if not self.plot_x:
+            return
+
+        x = list(self.plot_x)
+        self.plot_curve1.setData(x, list(self.plot_ch1))
+        self.plot_curve2.setData(x, list(self.plot_ch2))
+        self.plot_curve3.setData(x, list(self.plot_ch3))
 
     # ---------- Cleanup ----------
 
@@ -588,7 +703,7 @@ def main():
     logging.info(f"Logging to file: {log_file}")
 
     app = QtWidgets.QApplication(sys.argv)
-    w = RealTimeTestApp(port='COM10', baudrate=500000)
+    w = RealTimeTestApp(port='COM9', baudrate=500000)
     w.resize(700, 550)
     w.show()
     sys.exit(app.exec_())

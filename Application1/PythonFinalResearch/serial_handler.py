@@ -7,7 +7,7 @@ from collections import deque
 import serial
 
 class SerialEMGHandler:
-    def __init__(self, port='COM8', baudrate=500000):
+    def __init__(self, port='COM9', baudrate=500000):
         self.port = port
         self.baudrate = baudrate
         self.running = False

@@ -169,13 +169,92 @@ class trainclass:
             self.lib.Choleski_LU_Solve.argtypes = self.lib.Lower_Triangular_Solve.argtypes
 
     # -------------------------------------------------
-    # TRIAL INFO: timestamp + channels format
+    # Trial parsing helpers (old + new formats)
+    # -------------------------------------------------
+    def _split_trial_fields(self, line: str):
+        """
+        Split one trial line into fields.
+        Supports comma-separated new format and whitespace old formats.
+        """
+        if "," in line:
+            parts = [p.strip() for p in line.split(",")]
+            # tolerate trailing comma without inventing an empty column
+            while parts and parts[-1] == "":
+                parts.pop()
+            return parts
+        return line.split()
+
+    def _infer_num_channels_from_header_line(self, header_line: str) -> int:
+        """
+        Infer channel count from header line.
+        Handles headers like:
+            timestamp ch1 ch2 ch3
+            timestamp ch1 ch2 ch3 button
+            t_ns,ch1_V,ch2_V,ch3_V
+            t_ns,ch1_V,ch2_V,ch3_V,button
+        """
+        cols = self._split_trial_fields(header_line)
+        if len(cols) < 2:
+            raise ValueError(f"Invalid header: {header_line}")
+
+        cols_lc = [c.lower() for c in cols]
+        ch_cols = [c for c in cols_lc if c.startswith("ch")]
+        if ch_cols:
+            return len(ch_cols)
+
+        # Fallback: first column is time, remaining are channels (+ optional button)
+        num_channels = len(cols) - 1
+        if cols_lc[-1] in ("button", "btn"):
+            num_channels -= 1
+        return max(num_channels, 0)
+
+    def _parse_trial_channel_values(
+        self,
+        line: str,
+        expected_channels: int,
+        trial_path: Path,
+        line_number: int,
+    ):
+        """
+        Parse one data row and return exactly expected_channels floats.
+        """
+        parts = self._split_trial_fields(line)
+        if not parts:
+            raise ValueError(f"{trial_path}:{line_number}: empty data line")
+
+        if "," in line:
+            # New CSV format: t_ns,ch1,ch2,ch3[,button]
+            start_idx = 1
+        else:
+            # Old text formats:
+            #   HH:MM:SS.mmm ch1 ch2 ch3
+            #   YYYY-MM-DD HH:MM:SS.mmm ch1 ch2 ch3
+            start_idx = 1
+            if len(parts) >= expected_channels + 2 and "-" in parts[0] and ":" in parts[1]:
+                start_idx = 2
+
+        end_idx = start_idx + expected_channels
+        if len(parts) < end_idx:
+            raise ValueError(
+                f"{trial_path}:{line_number}: expected at least {end_idx} fields, got {len(parts)}"
+            )
+
+        vals = []
+        for tok in parts[start_idx:end_idx]:
+            try:
+                vals.append(float(tok))
+            except ValueError as e:
+                raise ValueError(
+                    f"{trial_path}:{line_number}: cannot parse EMG value '{tok}'"
+                ) from e
+        return vals
+
+    # -------------------------------------------------
+    # TRIAL INFO: old + new EMG formats
     # -------------------------------------------------
     def trial_data_info(self, trial_path: Path):
         """
-        Given a single trial file in the format:
-            timestamp    ch1    ch2    ch3
-            16:04:11.572 1.29   1.32   1.31
+        Given a single trial file in either old/new EMG format,
         Return (num_samples, num_channels).
         """
         logger.debug("Reading trial data info from %s", trial_path)
@@ -188,16 +267,17 @@ class trainclass:
             raise ValueError(f"Trial file {trial_path} is empty")
 
         header = lines[0]
-        header_cols = header.split()
-        if len(header_cols) < 2:
+        try:
+            num_channels = self._infer_num_channels_from_header_line(header)
+        except ValueError:
             logger.error(
                 "Header in %s invalid: %s", trial_path, header
             )
             raise ValueError(
-                f"Header in {trial_path} doesn't look like 'timestamp ch1 ch2 ...': {header}"
+                f"Header in {trial_path} doesn't look like a supported EMG header: {header}"
             )
-
-        num_channels = len(header_cols) - 1
+        if num_channels <= 0:
+            raise ValueError(f"Header in {trial_path} has no channel columns: {header}")
         data_lines = lines[1:]
         num_samples = len(data_lines)
 
@@ -539,11 +619,7 @@ class trainclass:
 
     def load_trial_data(self, trial_path: Path, label: str = "traindata"):
         """
-        Load EMG data from a trial file in the format:
-
-            timestamp   ch1   ch2   ch3
-            16:04:11.572 1.29 1.32 1.31
-            ...
+        Load EMG data from old/new trial text formats.
 
         into either self.traindata or self.testdata, using interleaved layout:
             [s0_ch1, s0_ch2, ..., s0_chC,  s1_ch1, s1_ch2, ..., s1_chC,  ...]
@@ -565,8 +641,8 @@ class trainclass:
         if not lines:
             raise ValueError(f"Trial file {trial_path} is empty")
 
-        header_cols = lines[0].split()
-        num_channels_in_file = len(header_cols) - 1  # minus timestamp
+        header = lines[0]
+        num_channels_in_file = self._infer_num_channels_from_header_line(header)
 
         if num_channels_in_file != self.channel:
             raise ValueError(
@@ -583,10 +659,13 @@ class trainclass:
             )
 
         values = []
-        for line in data_lines:
-            parts = line.split()
-            # parts[0] = timestamp; rest are channels
-            ch_vals = [float(v) for v in parts[1:1 + self.channel]]
+        for line_no, line in enumerate(data_lines, start=2):
+            ch_vals = self._parse_trial_channel_values(
+                line=line,
+                expected_channels=self.channel,
+                trial_path=trial_path,
+                line_number=line_no,
+            )
             values.extend(ch_vals)
 
         if len(values) != self.channel * self.data_per_trial:
@@ -6256,7 +6335,7 @@ class trainclass:
 
 if __name__ == "__main__":
     train_obj = trainclass()
-    root_tabledata = r"C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application1\PythonFinalResearch\finalemgoverthefall\testfile"
+    root_tabledata = r"C:\Users\mtino\OneDrive\Desktop\ResearchCode\Application5\set1final"
 
     for prune in range(1, 15):  # 1..14
         print(f"\n\n=== Running prune_trials={prune} ===\n")

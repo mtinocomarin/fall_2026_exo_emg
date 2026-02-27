@@ -1,4 +1,6 @@
-# Ignore ALL video files
+# ==========================================
+# VIDEO FILES (Ignore all video recordings)
+# ==========================================
 *.avi
 *.mp4
 *.mov
@@ -8,9 +10,54 @@
 *.mpg
 *.mpeg
 
-# Ignore ALL text files
+# ==========================================
+# TEXT FILES (Ignore raw EMG data logs)
+# ==========================================
 *.txt
 
-# Ignore Python cache
+# ==========================================
+# PYTHON CACHE
+# ==========================================
 __pycache__/
 *.pyc
+
+# ==========================================
+# STM32CubeIDE / Eclipse
+# ==========================================
+
+# Workspace metadata (DO NOT upload)
+.metadata/
+.settings/
+*.log
+*.tmp
+*.launch
+
+# ==========================================
+# BUILD FOLDERS (Auto-generated)
+# ==========================================
+Debug/
+Release/
+build/
+
+# ==========================================
+# COMPILED / BINARY FILES
+# ==========================================
+*.o
+*.d
+*.elf
+*.bin
+*.hex
+*.map
+*.list
+
+# ==========================================
+# CMake (if used)
+# ==========================================
+CMakeFiles/
+CMakeCache.txt
+
+# ==========================================
+# OS FILES
+# ==========================================
+.DS_Store
+Thumbs.db
